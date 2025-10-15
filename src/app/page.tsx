@@ -8,6 +8,11 @@ export default async function HomePage() {
     .select('value')
     .eq('key','about_bio')
     .single(); // cuz only expect one row
+
+  if (error || !data) {
+        return <p className='test-center p-8'>Could not load projects.</p>
+  }
+                   
   
   const bioContent = data?.value;//get JSON object
 

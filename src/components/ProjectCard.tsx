@@ -1,5 +1,14 @@
-import Link from 'next/link';
-import type {Project} from '@/data/projects';
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardContent,
+    CardFooter
+} from "@/components/ui/card" 
+
+import Link from "next/link";
+import type {Project} from "@/data/projects";
 
 type ProjectCardProps = {
     project: Project;
@@ -7,22 +16,32 @@ type ProjectCardProps = {
 
 export default function ProjectCard({project}: ProjectCardProps){
     return(
-        <div className='border rounded-lg p-4 flex flex-col'>
-            <h3 className='text-xl font-bold mb-2'>{project.name}</h3>
-            <p className='text-gray-700 flex-grow'>{project.description}</p>
+        <Card className='flex flex-col'>
+            <CardHeader>
+                <CardTitle>{project.name}</CardTitle>
+                { project.techStack && project.techStack.length ? (
+                    <CardDescription>
+                        <strong>Tech Stack:</strong> {project.techStack.join(', ')}
+                    </CardDescription>
+                ): null }
+            </CardHeader>      
+            <CardContent>
+                <p>{project.description}</p>
+            </CardContent>
+            <CardFooter>
+                {project.link ? (
+                    <Link href={project.link} className='text-blue-500 hover:underline'>
+                        View Live 
+                    </Link>
+                ): null}
 
-            <div className='mt-4'>
-                <strong>Tech Stack:</strong> {project.techStack.join(', ')}
-            </div>
-            <div className='mt-4 flex space-x-4'>
-                <Link href={project.link} className='text-blue-500 hover:underline'>
-                    View Live 
-                </Link>
-                <Link href={project.githubUrl} className='text-blue-500 hover:underline'>
-                    Github 
-                </Link>
-            </div>
+                {project.githubUrl ? (
+                    <Link href={project.githubUrl} className='text-blue-500 hover:underline ml-4'>
+                        Github
+                    </Link>
+                ): null}
+            </CardFooter>
                     
-        </div>
+        </Card>
     );
 }
