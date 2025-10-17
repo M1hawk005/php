@@ -1,5 +1,7 @@
 import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
+import TimelineCard from "@/components/TimelineCard";
+import { Timeline } from "@/data/timeline";
 
 export default async function HomePage() {
   //fetching data from the database   
@@ -16,6 +18,17 @@ export default async function HomePage() {
   
   const bioContent = data?.value;//get JSON object
 
+  const { data: educationData , error: educationError } = await supabase// fetch education data
+  .from('timeline')
+  .select('*') 
+  .eq('category','education');
+
+
+  const { data: experienceData , error: experienceError } = await supabase// fetch experience data
+  .from('timeline')
+  .select('*') 
+  .eq('category','experience');
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -27,16 +40,24 @@ export default async function HomePage() {
               </p> 
             </section>
             <section>
-                <h2 className="text-2xl font-semibold mb-2">Education</h2>
-                    <p>
-                        This where where list education 
-                    </p>
+                <h2 className="text-2xl font-semibold mb-2">Experience</h2>
+                  {experienceData && experienceData.length > 0 && (
+                    <div className="gird gap-6">
+                        {experienceData.map((experience: Timeline ) => (
+                          <TimelineCard key={experience.id} timeline={experience} />
+                        ))}
+                    </div>
+                  )}
             </section>
             <section>
-                <h2 className="text-2xl font-semibold mb-2">Projects</h2>
-                    <p>
-                        This where where list education 
-                    </p>
+                <h2 className="text-2xl font-semibold mb-2">Education</h2>
+                  {educationData && educationData.length > 0 && (
+                    <div className="gird gap-6">
+                        {educationData.map((education: Timeline ) => (
+                          <TimelineCard key={education.id} timeline={education} />
+                        ))}
+                    </div>
+                  )}
             </section>
         </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">

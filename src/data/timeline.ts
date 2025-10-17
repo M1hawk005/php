@@ -4,5 +4,5 @@ export type Timeline ={
     institution: string;
     description: string;
     duration: string;
-
+    marsheetUrl: string;
 };

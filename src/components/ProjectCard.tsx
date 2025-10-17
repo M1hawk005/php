@@ -19,7 +19,7 @@ export default function ProjectCard({project}: ProjectCardProps){
         <Card className='flex flex-col'>
             <CardHeader>
                 <CardTitle>{project.name}</CardTitle>
-                { project.techStack && project.techStack.length ? (
+                {project.techStack && project.techStack.length ? (
                     <CardDescription>
                         <strong>Tech Stack:</strong> {project.techStack.join(', ')}
                     </CardDescription>
