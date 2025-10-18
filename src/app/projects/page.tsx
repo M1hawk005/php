@@ -11,8 +11,6 @@ export default async function ProjectsPage() {
     if (error || !projects) {
         return <p className='test-center p-8'>Could not load projects.</p>
     }
-    
-
 
     return(
         <main>

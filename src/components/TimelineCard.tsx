@@ -30,8 +30,8 @@ export default function TimelineCard({timeline}: TimelineCardProps){
                 {timeline.duration ? (
                     <p className="text-sm text-muted-foreground">{timeline.duration}</p>
                 ):null }
-                {timeline.marsheetUrl ? (
-                    <Link href={timeline.marsheetUrl} className="text-blue-500 hover:underline ml-4">
+                {timeline.marksheetUrl ? (
+                    <Link href={timeline.marksheetUrl} target="_blank" className="text-blue-500 hover:underline ml-4">
                         Scorecard
                     </Link>
                 ): null}

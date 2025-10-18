@@ -9,7 +9,11 @@ import {
 import { cn } from "@/lib/utils"
 import Link from "next/link";
 
-export default function Header(){
+type HeaderProps = {
+    resumeUrl: string | null;
+}
+
+export default function Header({resumeUrl}: HeaderProps){
     return(
         <header className="p-4 bg-gray-100 border-b">
             <NavigationMenu className="container mx-auto flex justify-between">
@@ -36,17 +40,19 @@ export default function Header(){
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <a 
-                            href="/resume.pdf"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={cn(
-                                navigationMenuTriggerStyle(),
-                                "bg-primary text-primary-foreground"
-                            )}
-                        >
-                            Resume
-                        </a>
+                        {resumeUrl ? (
+                            <a 
+                                href={resumeUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={cn(
+                                    navigationMenuTriggerStyle(),
+                                    "bg-primary text-primary-foreground"
+                                )}
+                            >
+                                Resume
+                            </a>
+                        ): null }
                     </NavigationMenuItem>
                 </NavigationMenuList>
             </NavigationMenu>

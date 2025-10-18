@@ -1,8 +1,8 @@
 export type Timeline ={
     id: number;
     title: string;
-    institution: string;
+    institution: Record<string, string>;
     description: string;
     duration: string;
-    marsheetUrl: string;
+    marksheetUrl: string;
 };
