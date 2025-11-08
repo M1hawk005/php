@@ -1,9 +1,8 @@
 import { supabase } from "@/lib/supabaseClient";
-import Image from "next/image";
 import TimelineCard from "@/components/TimelineCard";
 import { Timeline } from "@/data/timeline";
 import ProjectCard from "@/components/ProjectCard";
-import { Project } from "@/data/projects";
+import type { Project } from "@/data/projects";
 
 export default async function HomePage() {
   
@@ -54,92 +53,57 @@ export default async function HomePage() {
 
   
   return (
-    <div className="font-sans p-8 pb-20 gap-16 sm:p-20">
-      <main className="h-screen overflow-y-scroll snap-y snap-mandatory">
-            <section className="h-screen snap-start">
-              <h1 className="text-4xl font-bold mb-4">About Me</h1>
-                <p>
-                  {siteContent ? siteContent.text : 'Loading bio....'}   
-                </p> 
-            </section>
-            <section className="h-screen snap-start">
-              <h2 className="text-2xl font-semibold mb-2">Experience</h2>
-                {experienceData && experienceData.length > 0 && (
-                  <div className="grid gap-6">
-                      {experienceData.map((experience: Timeline ) => (
-                        <TimelineCard key={experience.id} timeline={experience} />
-                      ))}
+    <div className="h-screen overflow-y-scroll snap-y snap-mandatory bg-black text-white">      
+      <main>
+        <section className="h-screen snap-start flex flex-col justify-center p-50">
+          <h1 className="text-4xl font-bold mb-4">About Me</h1>
+            <p>
+              {siteContent ? siteContent.text : 'Loading bio....'}   
+            </p> 
+        </section>
+        <section className="h-screen snap-start flex flex-col p-25">
+          <h2 className="text-2xl font-semibold mb-2">Experience</h2>
+          <div className="overflow-auto h-full space-x-4 p-4">
+            {experienceData && experienceData.length > 0 ? (  
+                  experienceData.map((experience: Timeline ) => (
+                    <div key={experience.id} className="flex-shrink-0 snap-start">
+                      <TimelineCard timeline={experience} />
+                    </div>
+                  ))
+            ):(
+              <p className="text-center">No experience data available.</p>
+            )}
+          </div>
+        </section>
+        <section className="h-screen snap-start flex flex-col p-25">
+          <h2 className="text-2xl font-semibold mb-2">Education</h2>
+          <div className="overflow-auto h-full space-x-4 p-4">
+            {educationData && educationData.length > 0 && (
+              <div className="grid gap-6">
+                  {educationData.map((education: Timeline ) => (
+                    <div key={education.id} className="flex-shrink-0 snap-start">
+                    <TimelineCard timeline={education} />
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
+        </section>
+       <section className="h-screen snap-start flex flex-col p-25">
+          <h2 className="text-2xl font-semibold mb-2">Projects</h2>
+          <div className="overflow-x-auto h-full space-x-4 p-4">
+            {highlightedProjects && highlightedProjects.length > 0 ? (
+              <div className="grid gap-6">
+                {highlightedProjects.map((project: Project) => (
+                  <div key={project.id}>
+                    <ProjectCard project={project} />
                   </div>
-                )}
-            </section>
-            <section className="h-screen snap-start">
-              <h2 className="text-2xl font-semibold mb-2">Education</h2>
-                {educationData && educationData.length > 0 && (
-                  <div className="grid gap-6">
-                      {educationData.map((education: Timeline ) => (
-                        <TimelineCard key={education.id} timeline={education} />
-                      ))}
-                  </div>
-                )}
-            </section>
-            <section className="h-screen snap-start">
-              <h2 className="text-2xl font-semibold mb-2">Projects</h2>
-                {highlightedProjects && highlightedProjects.length > 0 && (
-                  <div className="grid gap-6">
-                      {highlightedProjects.map((project: Project) => (
-                        <ProjectCard key={project.id} project={project} />
-                      ))}
-                  </div>
-                )}
-            </section>
-        </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </section> 
+      </main>
     </div>
   );
 }
