@@ -1,19 +1,29 @@
 import Header from '@/components/Header'
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Geist, Geist_Mono } from "next/font/google";
 import { supabase } from '@/lib/supabaseClient';
+import localFont from 'next/font/local'
 // @ts-expect-error: side-effect CSS import has no type declarations
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const myFont = localFont({
+  src: [
+    {path: '../../public/fonts/GohuFontuni14NerdFont-Regular.ttf'},
+    {path: '../../public/fonts/3270NerdFontMono-SemiCondensed.ttf'},
+  ],
+  variable: '--font-custom', //optional CSS variable we can use
+  display: 'swap',
+})
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
+
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -42,7 +52,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased pt-16`}
+        className={`${myFont.className} antialiased pt-16`}
       >
         <Header resumeUrl={resumeUrl} />
         {children}

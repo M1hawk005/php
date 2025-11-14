@@ -9,18 +9,17 @@ import {
 
 import Link from "next/link";
 import type {Project} from "@/data/projects";
-
 type ProjectCardProps = {
     project: Project;
 }
 
 export default function ProjectCard({project}: ProjectCardProps){
     return(
-        <Card className='flex flex-col'>
+        <Card className='flex flex-col rounded-none'>
             <CardHeader>
                 <CardTitle>{project.name}</CardTitle>
                 {project.techStack && project.techStack.length ? (
-                    <CardDescription>
+                <CardDescription>
                         <strong>Tech Stack:</strong> {project.techStack.join(', ')}
                     </CardDescription>
                 ): null }

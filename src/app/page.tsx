@@ -3,6 +3,7 @@ import TimelineCard from "@/components/TimelineCard";
 import { Timeline } from "@/data/timeline";
 import ProjectCard from "@/components/ProjectCard";
 import type { Project } from "@/data/projects";
+import Image from "next/image";
 
 export default async function HomePage() {
   
@@ -42,7 +43,7 @@ export default async function HomePage() {
     return <p className="text-center p-8">Error loading experience data.</p>
   }
 
-  const { data: highlightedProjects, error: highlightedProjectsError} = await supabase// fetch highlighted projects
+  const { data: highlightedProjectsData, error: highlightedProjectsError} = await supabase// fetch highlighted projects
     .from('projects')
     .select('*')
     .eq('isHighlighted', true);
@@ -51,12 +52,36 @@ export default async function HomePage() {
     console.error("Erro fetching highlighed projects:",highlightedProjectsError.message);
   }
 
+  const { data: profilePictureData, error: profilePictureError} = await supabase//fetch profile picture
+    .from('site_content')
+    .select('value')
+    .eq('key','profile_picture')
+    .single();//cuz only one row
+
+  if ( profilePictureError || !profilePictureData){
+    return <p className="test-center p-8">Could not load Profile Picture</p>
+  }
+
+  const profileImageUrl =
+  typeof profilePictureData.value === "string"
+    ? profilePictureData.value
+    : profilePictureData.value?.url ?? "/avatar.jpg";
+
   
   return (
     <div className="h-screen overflow-y-scroll snap-y snap-mandatory bg-black text-white">      
       <main>
         <section className="h-screen snap-start flex flex-col justify-center p-50">
-          <h1 className="text-4xl font-bold mb-4">About Me</h1>
+          <div className="w-full md:w-40 flex-shrink-0">
+            <Image
+              src={profileImageUrl}
+              alt="Profile"
+              width={40000}
+              height={50000}
+              className="object-cover rounded-none"
+            />
+          </div>
+          <h1 className="text-4xl font-bold mb-4 space-x-4">About Me</h1>
             <p>
               {siteContent ? siteContent.text : 'Loading bio....'}   
             </p> 
@@ -64,21 +89,22 @@ export default async function HomePage() {
         <section className="h-screen snap-start flex flex-col p-25">
           <h2 className="text-2xl font-semibold mb-2">Experience</h2>
           <div className="overflow-auto h-full space-x-4 p-4">
-            {experienceData && experienceData.length > 0 ? (  
-                  experienceData.map((experience: Timeline ) => (
+            {experienceData && experienceData.length > 0 ? (
+              <div className="grid gap-6"> 
+                  {experienceData.map((experience: Timeline ) => (
                     <div key={experience.id} className="flex-shrink-0 snap-start">
                       <TimelineCard timeline={experience} />
                     </div>
-                  ))
-            ):(
-              <p className="text-center">No experience data available.</p>
-            )}
+                  ))}
+
+              </div>
+            ) : null}
           </div>
         </section>
         <section className="h-screen snap-start flex flex-col p-25">
           <h2 className="text-2xl font-semibold mb-2">Education</h2>
           <div className="overflow-auto h-full space-x-4 p-4">
-            {educationData && educationData.length > 0 && (
+            {educationData && educationData.length > 0 ? (
               <div className="grid gap-6">
                   {educationData.map((education: Timeline ) => (
                     <div key={education.id} className="flex-shrink-0 snap-start">
@@ -86,15 +112,15 @@ export default async function HomePage() {
                     </div>
                   ))}
               </div>
-            )}
+            ) : null}
           </div>
         </section>
        <section className="h-screen snap-start flex flex-col p-25">
           <h2 className="text-2xl font-semibold mb-2">Projects</h2>
           <div className="overflow-x-auto h-full space-x-4 p-4">
-            {highlightedProjects && highlightedProjects.length > 0 ? (
+            {highlightedProjectsData && highlightedProjectsData.length > 0 ? (
               <div className="grid gap-6">
-                {highlightedProjects.map((project: Project) => (
+                {highlightedProjectsData.map((project: Project) => (
                   <div key={project.id}>
                     <ProjectCard project={project} />
                   </div>

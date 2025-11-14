@@ -13,14 +13,16 @@ export default async function ProjectsPage() {
     }
 
     return(
-        <main>
-            <h1 className="text-4xl font-bold">My Projects</h1>
-            <div className='mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 '>
-                {projects.map((project: Project) => (
-                    <ProjectCard key={project.id} project={project} />
-                    ))
-                }
-            </div> 
-        </main>
+        <div className="h-screen bg-black text-white p-25"> 
+            <main>
+                <h1 className="text-4xl font-bold">My Projects</h1>
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {projects.map((project: Project) => (
+                        <ProjectCard key={project.id} project={project} />
+                        ))
+                    }
+                </div> 
+            </main>
+        </div>
     );
 }

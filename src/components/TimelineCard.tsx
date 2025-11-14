@@ -16,7 +16,7 @@ type TimelineCardProps = {
 
 export default function TimelineCard({timeline}: TimelineCardProps){
    return( 
-        <Card className="flex flex-col h-full">
+        <Card className="flex flex-col h-full rounded-none">
             <CardHeader>
                 <CardTitle>{timeline.title}</CardTitle>
                 {timeline.institution? (
