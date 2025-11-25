@@ -8,8 +8,8 @@ import "./globals.css";
 
 const myFont = localFont({
   src: [
-    {path: '../../public/fonts/GohuFontuni14NerdFont-Regular.ttf'},
-    {path: '../../public/fonts/3270NerdFontMono-SemiCondensed.ttf'},
+    { path: '../../public/fonts/GohuFontuni14NerdFont-Regular.ttf' },
+    { path: '../../public/fonts/3270NerdFontMono-SemiCondensed.ttf' },
   ],
   variable: '--font-custom', //optional CSS variable we can use
   display: 'swap',
@@ -37,20 +37,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const { data: resumeData, error: resumeError} = await supabase// fetch resume data
+  const { data: resumeData, error: resumeError } = await supabase// fetch resume data
     .from('site_content')
     .select('value')
-    .eq('key','resume')
+    .eq('key', 'resume')
     .single();//  cuz only one row
 
-  if( resumeError ){
+  if (resumeError) {
     console.error("Failed to fetch resume", resumeError.message);
   }
 
   const resumeUrl = resumeData?.value?.url;
 
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
         className={`${myFont.className} antialiased pt-16`}
       >

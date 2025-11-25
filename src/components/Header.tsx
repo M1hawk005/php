@@ -1,11 +1,11 @@
 'use client'
 import { useState, useEffect } from "react";
 import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
 import { cn } from "@/lib/utils"
@@ -15,86 +15,122 @@ type HeaderProps = {
     resumeUrl: string | null;
 }
 
-export default function Header({resumeUrl}: HeaderProps){
+import { ChevronDown, ChevronUp } from "lucide-react";
+
+import { usePathname } from "next/navigation";
+
+export default function Header({ resumeUrl }: HeaderProps) {
     const [isVisible, setIsVisible] = useState(true); //Header visibility
-    const [isLocked, setIsLocked] = useState(false); //Lock state
     const [hasScrolled, setHasScrolled] = useState(false); //Track first scroll
+    const pathname = usePathname();
 
     useEffect(() => {
         const handleScroll = () => {
-            if (isLocked) return; //Don't hide if locked
-            if (!hasScrolled && window.scrollY > 0){
+            if (!hasScrolled && window.scrollY > 50) { // Threshold of 50px
                 setHasScrolled(true);
                 setIsVisible(false);
             }
         };
 
         window.addEventListener('scroll', handleScroll);
-        return() => window.removeEventListener('scroll', handleScroll);
-    }, [hasScrolled, isLocked]);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [hasScrolled]);
 
-    const handleHeaderClick = () => {
-        setIsLocked(true); //Lock on click
-        setIsVisible(true); 
+    const toggleHeader = () => {
+        setIsVisible(!isVisible);
     }
 
-    return(
-        <>   
-        {!isVisible && (
-            <div
-                className="fixed left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer"
-                onMouseEnter={() => setIsVisible(true)}//unhide on hover
-            ><div className="w-2 h-8 bg-white opacity-50"></div>    
-            </div>
-        )}
-        <header 
-            className={cn(
-                "fixed top-0 left-0 right-0 z-10 p-4 bg-gray-100 border-b transition-transform duration-100",
-                isVisible? "translate-y-0":"-translate-y-full" //slide up and down
-            )}
-            onClick={handleHeaderClick}//Lock on click
-        >
-            <NavigationMenu className="container mx-auto flex justify-between">
-                <NavigationMenuLink asChild>
-                    <Link href="/" className="text-gray-900 font-bold">
-                        mihawk.org
+    return (
+        <>
+            {/* Toggle Button */}
+            <button
+                onClick={toggleHeader}
+                className="fixed top-0 left-4 z-50 p-2 bg-transparent backdrop-blur-none border-b border-x border-border/50 hover:bg-accent hover:text-accent-foreground transition-colors"
+                aria-label={isVisible ? "Collapse Header" : "Expand Header"}
+            >
+                {isVisible ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            </button>
+
+            <header
+                className={cn(
+                    "fixed top-0 left-0 right-0 z-40 p-4 bg-background/70 backdrop-blur-md border-b border-border transition-transform duration-300 ease-in-out",
+                    isVisible ? "translate-y-0" : "-translate-y-full" //slide up and down
+                )}
+            >
+                <div className="w-full flex justify-between items-center px-4">
+                    <Link
+                        href="/"
+                        className={cn(
+                            "font-bold text-xl tracking-wider ml-12 transition-colors hover:text-primary",
+                            pathname === "/" ? "text-primary" : "text-foreground"
+                        )}
+                    >
+                        HOME
                     </Link>
-                </NavigationMenuLink>
-                    
-                <NavigationMenuList className="flex space-x-4">
-                    <NavigationMenuItem>
-                        <NavigationMenuLink asChild>
-                            <Link href="/projects" className={navigationMenuTriggerStyle()}>Projects</Link>
-                        </NavigationMenuLink> 
-                    </NavigationMenuItem>
-                        <NavigationMenuItem>
-                        <NavigationMenuLink asChild>
-                            <Link href="/forum" className={navigationMenuTriggerStyle()}>Forum</Link>
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                        <NavigationMenuLink asChild>
-                            <Link href="/contact" className={navigationMenuTriggerStyle()}>Contact</Link>
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                        {resumeUrl ? (
-                            <a 
-                                href={resumeUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={cn(
-                                    navigationMenuTriggerStyle(),
-                                    "bg-primary text-primary-foreground"
-                                )}
-                            >
-                                Resume
-                            </a>
-                        ): null }
-                    </NavigationMenuItem>
-                </NavigationMenuList>
-            </NavigationMenu>
-        </header>
+
+                    <NavigationMenu>
+                        <NavigationMenuList className="flex space-x-4">
+                            <NavigationMenuItem>
+                                <NavigationMenuLink asChild>
+                                    <Link
+                                        href="/projects"
+                                        className={cn(
+                                            navigationMenuTriggerStyle(),
+                                            "transition-colors hover:bg-primary hover:text-primary-foreground",
+                                            pathname === "/projects" ? "bg-primary text-primary-foreground" : "bg-transparent"
+                                        )}
+                                    >
+                                        Projects
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                <NavigationMenuLink asChild>
+                                    <Link
+                                        href="/forum"
+                                        className={cn(
+                                            navigationMenuTriggerStyle(),
+                                            "transition-colors hover:bg-secondary hover:text-secondary-foreground",
+                                            pathname === "/forum" ? "bg-secondary text-secondary-foreground" : "bg-transparent"
+                                        )}
+                                    >
+                                        Forum
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                <NavigationMenuLink asChild>
+                                    <Link
+                                        href="/contact"
+                                        className={cn(
+                                            navigationMenuTriggerStyle(),
+                                            "transition-colors hover:bg-accent hover:text-accent-foreground",
+                                            pathname === "/contact" ? "bg-accent text-accent-foreground" : "bg-transparent"
+                                        )}
+                                    >
+                                        Contact
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                {resumeUrl ? (
+                                    <a
+                                        href={resumeUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={cn(
+                                            navigationMenuTriggerStyle(),
+                                            "bg-primary text-primary-foreground hover:bg-primary/90"
+                                        )}
+                                    >
+                                        Resume
+                                    </a>
+                                ) : null}
+                            </NavigationMenuItem>
+                        </NavigationMenuList>
+                    </NavigationMenu>
+                </div>
+            </header>
         </>
     );
 }
