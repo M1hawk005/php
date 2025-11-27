@@ -19,6 +19,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { usePathname } from "next/navigation";
 
+// Force rebuild to fix hydration mismatch
 export default function Header({ resumeUrl }: HeaderProps) {
     const [isVisible, setIsVisible] = useState(true); //Header visibility
     const [hasScrolled, setHasScrolled] = useState(false); //Track first scroll
@@ -53,7 +54,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
 
             <header
                 className={cn(
-                    "fixed top-0 left-0 right-0 z-40 p-4 bg-background/70 backdrop-blur-md border-b border-border transition-transform duration-300 ease-in-out",
+                    "fixed top-0 left-0 right-0 z-40 h-20 flex items-center px-4 bg-background/80 backdrop-blur-lg border-b border-border transition-transform duration-300 ease-in-out",
                     isVisible ? "translate-y-0" : "-translate-y-full" //slide up and down
                 )}
             >
@@ -61,8 +62,10 @@ export default function Header({ resumeUrl }: HeaderProps) {
                     <Link
                         href="/"
                         className={cn(
-                            "font-bold text-xl tracking-wider ml-12 transition-colors hover:text-primary",
-                            pathname === "/" ? "text-primary" : "text-foreground"
+                            "font-bold text-xl tracking-wider ml-16 px-6 py-2 border border-primary transition-all duration-300",
+                            pathname === "/"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-transparent text-primary hover:bg-primary hover:text-primary-foreground"
                         )}
                     >
                         HOME
@@ -76,8 +79,8 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                         href="/projects"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "transition-colors hover:bg-primary hover:text-primary-foreground",
-                                            pathname === "/projects" ? "bg-primary text-primary-foreground" : "bg-transparent"
+                                            "transition-colors hover:!bg-[var(--nav-green)] hover:!text-primary-foreground focus:!bg-[var(--nav-green)] focus:!text-primary-foreground",
+                                            pathname === "/projects" ? "!bg-[var(--nav-green)] !text-primary-foreground" : "bg-transparent"
                                         )}
                                     >
                                         Projects
@@ -90,8 +93,8 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                         href="/forum"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "transition-colors hover:bg-secondary hover:text-secondary-foreground",
-                                            pathname === "/forum" ? "bg-secondary text-secondary-foreground" : "bg-transparent"
+                                            "transition-colors hover:!bg-[var(--nav-purple)] hover:!text-primary-foreground focus:!bg-[var(--nav-purple)] focus:!text-primary-foreground",
+                                            pathname === "/forum" ? "!bg-[var(--nav-purple)] !text-primary-foreground" : "bg-transparent"
                                         )}
                                     >
                                         Forum
@@ -104,8 +107,8 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                         href="/contact"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "transition-colors hover:bg-accent hover:text-accent-foreground",
-                                            pathname === "/contact" ? "bg-accent text-accent-foreground" : "bg-transparent"
+                                            "transition-colors hover:!bg-[var(--nav-cyan)] hover:!text-primary-foreground focus:!bg-[var(--nav-cyan)] focus:!text-primary-foreground",
+                                            pathname === "/contact" ? "!bg-[var(--nav-cyan)] !text-primary-foreground" : "bg-transparent"
                                         )}
                                     >
                                         Contact
@@ -120,7 +123,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                         rel="noopener noreferrer"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "bg-primary text-primary-foreground hover:bg-primary/90"
+                                            "bg-transparent border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
                                         )}
                                     >
                                         Resume

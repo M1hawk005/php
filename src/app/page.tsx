@@ -4,7 +4,11 @@ import { Timeline } from "@/data/timeline";
 import ProjectCard from "@/components/ProjectCard";
 import type { Project } from "@/data/projects";
 import Image from "next/image";
-
+import Link from "next/link";
+import { ChevronDown } from "lucide-react";
+import SocialSidebar from "@/components/SocialSidebar";
+import EmailSidebar from "@/components/EmailSidebar";
+import WorkSection from "@/components/WorkSection";
 export default async function HomePage() {
 
   //fetching data from the database   
@@ -68,88 +72,102 @@ export default async function HomePage() {
       : profilePictureData.value?.url ?? "/avatar.jpg";
 
 
+  // Fetch Intro Data
+  const { data: introData } = await supabase
+    .from('site_content')
+    .select('value')
+    .eq('key', 'intro')
+    .single();
+
+  let intro = {
+    name: "Aditya Malik",
+    bio: "Software Engineer",
+    html_text: "Welcome to my portfolio."
+  };
+
+  if (introData?.value) {
+    if (typeof introData.value === 'string') {
+      try {
+        intro = JSON.parse(introData.value);
+      } catch (e) {
+        console.error("Failed to parse intro JSON", e);
+      }
+    } else {
+      intro = introData.value;
+    }
+  }
+
   return (
-    <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-background text-foreground relative scroll-smooth">
+    <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-background text-foreground relative scroll-smooth no-scrollbar overscroll-y-none [&::-webkit-scrollbar]:hidden">
 
 
       <main className="w-full">
+        <SocialSidebar
+          github={siteContent?.github || ""}
+          linkedin={siteContent?.linkedin || ""}
+        />
+        <EmailSidebar
+          email={siteContent?.email || ""}
+        />
+        {/* Intro Section */}
+        <section className="h-screen w-full snap-start flex flex-col justify-center items-start text-left p-8 md:p-24 pb-20 relative max-w-7xl mx-auto overflow-hidden">
+          <span className="text-accent font-mono mb-4 text-lg">Hi, my name is</span>
+          <h1 className="text-6xl md:text-8xl font-bold text-foreground mb-4">
+            {intro.name}.
+          </h1>
+          <h2 className="text-4xl md:text-4xl font-bold text-muted-foreground mb-8">
+            {intro.bio}.
+          </h2>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed">
+            {intro.html_text}
+          </p>
+          <Link
+            href="/contact"
+            className="px-7 py-3 border border-accent text-accent rounded hover:bg-accent/10 transition-colors font-mono"
+          >
+            Get In Touch
+          </Link>
+
+          <div className="absolute bottom-25 left-1/2 -translate-x-1/2 animate-bounce">
+            <ChevronDown className="text-muted-foreground w-8 h-8" />
+          </div>
+        </section>
+
         {/* About Section */}
-        <section className="h-screen w-full snap-start flex flex-col md:flex-row items-center justify-center gap-12 p-8 md:p-24 relative">
-          <div className="w-64 h-64 md:w-80 md:h-80 flex-shrink-0 relative group">
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary to-secondary rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <Image
-              src={profileImageUrl}
-              alt="Profile"
-              width={400}
-              height={400}
-              className="object-cover rounded-full border-4 border-background relative z-10 w-full h-full"
-            />
-          </div>
-          <div className="max-w-2xl text-center md:text-left space-y-6">
-            <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent">
-              About Me
-            </h1>
-            <div className="p-6 bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl shadow-xl">
-              <p className="text-lg md:text-xl leading-relaxed text-muted-foreground">
-                {siteContent ? siteContent.text : 'Loading bio....'}
-              </p>
+        <section className="h-screen w-full snap-start flex items-center justify-center p-8 md:p-24 pb-20 relative overflow-hidden">
+          <div className="flex flex-col md:flex-row items-center gap-16 max-w-7xl w-full mx-auto">
+            {/* Text Content */}
+            <div className="flex-1 text-left space-y-8 order-2 md:order-1">
+              <h2 className="flex items-center text-3xl md:text-4xl font-bold text-foreground">
+                About Me
+              </h2>
+              <div className="text-lg md:text-xl leading-relaxed text-muted-foreground space-y-4">
+                <p>{siteContent ? siteContent.text : 'Loading bio....'}</p>
+              </div>
+            </div>
+
+            {/* Image with Frame */}
+            <div className="relative group order-1 md:order-2">
+              <div className="relative w-64 h-64 md:w-80 md:h-80 z-10">
+                <Image
+                  src={profileImageUrl}
+                  alt="Profile"
+                  fill
+                  className="object-cover rounded bg-muted grayscale hover:grayscale-0 transition-all duration-500"
+                />
+              </div>
+              {/* Decorative Frame */}
+              <div className="absolute top-5 left-5 w-64 h-64 md:w-80 md:h-80 border-2 border-accent rounded z-0 group-hover:top-3 group-hover:left-3 transition-all duration-300"></div>
             </div>
           </div>
         </section>
 
-        {/* Experience Section */}
-        <section className="h-screen w-full snap-start flex flex-col p-8 md:p-24 pt-24">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-primary mb-8 flex-shrink-0">Experience</h2>
-          <div className="flex-1 overflow-y-auto pr-4 space-y-6 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-8">
-              {experienceData && experienceData.length > 0 ? (
-                experienceData.map((experience: Timeline) => (
-                  <div key={experience.id} className="h-full">
-                    <TimelineCard timeline={experience} />
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-muted-foreground col-span-full">No experience data found.</p>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* Education Section */}
-        <section className="h-screen w-full snap-start flex flex-col p-8 md:p-24 pt-24">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-secondary mb-8 flex-shrink-0">Education</h2>
-          <div className="flex-1 overflow-y-auto pr-4 space-y-6 scrollbar-thin scrollbar-thumb-secondary/20 scrollbar-track-transparent">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-8">
-              {educationData && educationData.length > 0 ? (
-                educationData.map((education: Timeline) => (
-                  <div key={education.id} className="h-full">
-                    <TimelineCard timeline={education} />
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-muted-foreground col-span-full">No education data found.</p>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* Projects Section */}
-        <section className="h-screen w-full snap-start flex flex-col p-8 md:p-24 pt-24">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-accent mb-8 flex-shrink-0">Highlighted Projects</h2>
-          <div className="flex-1 overflow-y-auto pr-4 space-y-6 scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-8">
-              {highlightedProjectsData && highlightedProjectsData.length > 0 ? (
-                highlightedProjectsData.map((project: Project) => (
-                  <div key={project.id} className="h-full">
-                    <ProjectCard project={project} />
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-muted-foreground col-span-full">No projects found.</p>
-              )}
-            </div>
-          </div>
-        </section>
+        {/* Continuous Scroll Work Section */}
+        <WorkSection
+          experienceData={experienceData}
+          educationData={educationData}
+          highlightedProjectsData={highlightedProjectsData}
+        />
       </main>
     </div>
   );
