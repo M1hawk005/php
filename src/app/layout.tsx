@@ -3,15 +3,20 @@ import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import { supabase } from '@/lib/supabaseClient';
 import localFont from 'next/font/local'
-// @ts-expect-error: side-effect CSS import has no type declarations
 import "./globals.css";
 
-const myFont = localFont({
+const headingFont = localFont({
   src: [
     { path: '../../public/fonts/GohuFontuni14NerdFont-Regular.ttf' },
     { path: '../../public/fonts/3270NerdFontMono-SemiCondensed.ttf' },
   ],
-  variable: '--font-custom', //optional CSS variable we can use
+  variable: '--font-heading',
+  display: 'swap',
+})
+
+const bodyFont = localFont({
+  src: '../../public/fonts/HackNerdFontMono-Regular.ttf',
+  variable: '--font-body',
   display: 'swap',
 })
 
@@ -52,7 +57,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${myFont.className} antialiased pt-16`}
+        className={`${bodyFont.className} ${headingFont.variable} antialiased`}
       >
         <Header resumeUrl={resumeUrl} />
         {children}

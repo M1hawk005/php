@@ -20,7 +20,7 @@ export default async function ProjectsPage() {
     }
 
     return (
-        <div className="h-screen bg-black text-white pt-20 overflow-hidden flex flex-col">
+        <div className="h-screen bg-black text-white pt-27 overflow-hidden flex flex-col">
             {/* Fixed Heading */}
             <div className="flex-none px-8 md:px-24 pb-4 z-10 bg-black/50 backdrop-blur-sm">
                 <h1 className="text-4xl font-bold text-primary">My Projects</h1>

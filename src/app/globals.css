@@ -91,7 +91,7 @@
   --secondary-foreground: #1a1b26;
   --muted: #24283b;
   --muted-foreground: #565f89;
-  --accent: #7dcfff;
+  --accent: #87d787;
   --accent-foreground: #1a1b26;
   --destructive: #f7768e;
   --destructive-foreground: #1a1b26;
@@ -123,5 +123,14 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
   }
 }

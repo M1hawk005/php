@@ -15,7 +15,7 @@ type HeaderProps = {
     resumeUrl: string | null;
 }
 
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Home } from "lucide-react";
 
 import { usePathname } from "next/navigation";
 
@@ -41,12 +41,20 @@ export default function Header({ resumeUrl }: HeaderProps) {
         setIsVisible(!isVisible);
     }
 
+    const getBorderColor = () => {
+        if (pathname === '/projects') return 'border-[var(--nav-green)]';
+        if (pathname === '/forum') return 'border-[var(--nav-purple)]';
+        if (pathname === '/contact') return 'border-[var(--nav-cyan)]';
+        if (pathname === '/') return 'border-primary';
+        return 'border-border';
+    };
+
     return (
         <>
             {/* Toggle Button */}
             <button
                 onClick={toggleHeader}
-                className="fixed top-0 left-4 z-50 p-2 bg-transparent backdrop-blur-none border-b border-x border-border/50 hover:bg-accent hover:text-accent-foreground transition-colors"
+                className="fixed top-6 left-6 z-50 p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300"
                 aria-label={isVisible ? "Collapse Header" : "Expand Header"}
             >
                 {isVisible ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -54,7 +62,8 @@ export default function Header({ resumeUrl }: HeaderProps) {
 
             <header
                 className={cn(
-                    "fixed top-0 left-0 right-0 z-40 h-20 flex items-center px-4 bg-background/80 backdrop-blur-lg border-b border-border transition-transform duration-300 ease-in-out",
+                    "fixed top-0 left-0 right-0 z-40 h-20 flex items-center px-4 bg-background/80 backdrop-blur-lg border-b transition-all duration-300 ease-in-out",
+                    getBorderColor(),
                     isVisible ? "translate-y-0" : "-translate-y-full" //slide up and down
                 )}
             >
@@ -62,13 +71,20 @@ export default function Header({ resumeUrl }: HeaderProps) {
                     <Link
                         href="/"
                         className={cn(
-                            "font-bold text-xl tracking-wider ml-16 px-6 py-2 border border-primary transition-all duration-300",
+                            "ml-16 p-2 transition-all duration-300 rounded-md group",
                             pathname === "/"
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-transparent text-primary hover:bg-primary hover:text-primary-foreground"
+                                ? "text-primary"
+                                : "text-muted-foreground hover:text-primary"
                         )}
+                        aria-label="Home"
                     >
-                        HOME
+                        <Home
+                            size={24}
+                            className={cn(
+                                "transition-all duration-300",
+                                pathname === "/" ? "fill-primary/30" : "group-hover:fill-primary/30"
+                            )}
+                        />
                     </Link>
 
                     <NavigationMenu>

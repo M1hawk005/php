@@ -9,6 +9,7 @@ import { ChevronDown } from "lucide-react";
 import SocialSidebar from "@/components/SocialSidebar";
 import EmailSidebar from "@/components/EmailSidebar";
 import WorkSection from "@/components/WorkSection";
+import EndSection from "@/components/EndSection";
 export default async function HomePage() {
 
   //fetching data from the database   
@@ -168,6 +169,9 @@ export default async function HomePage() {
           educationData={educationData}
           highlightedProjectsData={highlightedProjectsData}
         />
+
+        {/* End Section */}
+        <EndSection />
       </main>
     </div>
   );
