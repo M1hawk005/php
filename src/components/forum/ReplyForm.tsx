@@ -46,13 +46,18 @@ export default function ReplyForm({ threadId }: ReplyFormProps) {
             }
 
             // Insert the reply
-            const { error: insertError } = await supabase
+            const secretKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+            const { data: postData, error: insertError } = await supabase
                 .from('posts')
                 .insert({
                     thread_id: threadId,
                     content: content.trim(),
                     image_url: imageUrl,
-                });
+                    secret_key: secretKey,
+                })
+                .select()
+                .single();
 
             if (insertError) throw insertError;
 
@@ -72,6 +77,13 @@ export default function ReplyForm({ threadId }: ReplyFormProps) {
             const { data: thread } = await supabase.from('threads').select('reply_count').eq('id', threadId).single();
             if (thread) {
                 await supabase.from('threads').update({ reply_count: (thread.reply_count || 0) + 1 }).eq('id', threadId);
+            }
+
+            // Save secret key to localStorage
+            if (postData) {
+                const storedKeys = JSON.parse(localStorage.getItem('php_forum_keys') || '{}');
+                storedKeys[postData.id] = secretKey;
+                localStorage.setItem('php_forum_keys', JSON.stringify(storedKeys));
             }
 
             setContent('');

@@ -7,13 +7,13 @@ import { ArrowLeft } from "lucide-react";
 export const revalidate = 0;
 
 interface ThreadPageProps {
-    params: {
+    params: Promise<{
         threadId: string;
-    };
+    }>;
 }
 
 export default async function ThreadPage({ params }: ThreadPageProps) {
-    const { threadId } = params;
+    const { threadId } = await params;
 
     // Fetch thread details (OP)
     const { data: thread, error: threadError } = await supabase

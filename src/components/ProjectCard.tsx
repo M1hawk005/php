@@ -16,10 +16,6 @@ type ProjectCardProps = {
 export default function ProjectCard({ project }: ProjectCardProps) {
     return (
         <Card className='flex flex-col h-full relative overflow-hidden bg-[#000000] backdrop-blur-md border border-accent/50 hover:border-accent transition-all duration-500 group hover:scale-[1.02] transform-gpu'>
-
-            {/* Top Accent Line */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
             <CardHeader className="relative z-10">
                 <CardTitle className="text-xl font-bold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent group-hover:from-secondary group-hover:to-accent transition-all duration-300">{project.name}</CardTitle>
                 {project.techStack && project.techStack.length ? (

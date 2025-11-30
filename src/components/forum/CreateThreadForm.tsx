@@ -43,15 +43,27 @@ export default function CreateThreadForm() {
                 imageUrl = publicUrl;
             }
 
-            const { error: insertError } = await supabase
+            const secretKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+            const { data: threadData, error: insertError } = await supabase
                 .from('threads')
                 .insert({
                     title: title.trim() || null,
                     content: content.trim(),
                     image_url: imageUrl,
-                });
+                    secret_key: secretKey,
+                })
+                .select()
+                .single();
 
             if (insertError) throw insertError;
+
+            // Save secret key to localStorage
+            if (threadData) {
+                const storedKeys = JSON.parse(localStorage.getItem('php_forum_keys') || '{}');
+                storedKeys[threadData.id] = secretKey;
+                localStorage.setItem('php_forum_keys', JSON.stringify(storedKeys));
+            }
 
             setTitle('');
             setContent('');
@@ -105,7 +117,7 @@ export default function CreateThreadForm() {
 
                 <div>
                     <textarea
-                        placeholder="Comment"
+                        placeholder="Content"
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         required

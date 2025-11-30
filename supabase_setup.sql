@@ -63,3 +63,7 @@ create policy "Allow public insert access on forum images"
 on storage.objects for insert
 to public
 with check ( bucket_id = 'forum-images' );
+
+
+ALTER TABLE public.threads ADD COLUMN IF NOT EXISTS secret_key text;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS secret_key text;
