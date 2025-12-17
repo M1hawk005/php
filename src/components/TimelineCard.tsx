@@ -19,43 +19,54 @@ export default function TimelineCard({ timeline, position = "left" }: TimelineCa
     const isLeft = position === "left";
 
     return (
-        <div className="relative group">
-            <Card className="flex flex-col h-full relative overflow-hidden bg-[#000000] backdrop-blur-md border border-accent/50 hover:border-accent transition-all duration-500 group-hover:scale-[1.02] transform-gpu">
-                <CardHeader className="relative z-10">
-                    <CardTitle className="text-xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent group-hover:from-accent group-hover:to-primary transition-all duration-300">{timeline.title}</CardTitle>
-                    {timeline.institution ? (
-                        <CardDescription className="text-muted-foreground mt-2 flex items-center gap-2">
-                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary/50"></span>
-                            {`${timeline.institution.name}, ${timeline.institution.location}`}
-                        </CardDescription>
-                    ) : null}
+        <div className="relative group h-full">
+            {/* Glow effect */}
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-xl opacity-0 group-hover:opacity-100 transition duration-500 blur-sm"></div>
+
+            <Card className="flex flex-col h-full relative overflow-hidden bg-card/50 backdrop-blur-sm border-border/40 hover:border-primary/30 transition-all duration-500 group-hover:translate-y-[-2px]">
+                <CardHeader className="relative z-10 pb-2">
+                    <div className="flex justify-between items-start gap-4">
+                        <div className="space-y-1.5">
+                            <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                                {timeline.title}
+                            </CardTitle>
+                            {timeline.institution ? (
+                                <CardDescription className="text-muted-foreground flex items-center gap-2 text-sm">
+                                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-secondary/70"></span>
+                                    {`${timeline.institution.name}, ${timeline.institution.location}`}
+                                </CardDescription>
+                            ) : null}
+                        </div>
+
+                        {timeline.duration ? (
+                            <div className="shrink-0 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-xs font-mono font-medium text-secondary">
+                                {timeline.duration}
+                            </div>
+                        ) : null}
+                    </div>
                 </CardHeader>
 
-                <CardContent className="flex-1 overflow-auto relative z-10">
-                    <p className="text-foreground/90 leading-relaxed">{timeline.description ?? ''}</p>
+                <CardContent className="flex-1 relative z-10 py-2">
+                    <p className="text-muted-foreground/90 text-sm leading-relaxed">
+                        {timeline.description ?? ''}
+                    </p>
                 </CardContent>
 
-                <CardFooter className="mt-auto flex justify-between items-center border-t border-border/30 pt-4 relative z-10 bg-card/50 backdrop-blur-sm">
-                    {timeline.duration ? (
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                            <p className="text-sm text-primary font-mono font-medium">{timeline.duration}</p>
-                        </div>
-                    ) : null}
-                    {timeline.marksheetUrl ? (
+                {timeline.marksheetUrl && (
+                    <CardFooter className="mt-auto pt-4 pb-6 relative z-10">
                         <Link
                             href={timeline.marksheetUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-secondary hover:text-accent transition-all duration-300 font-medium hover:underline underline-offset-4 flex items-center gap-1 group/link"
+                            className="text-xs font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5 group/link bg-primary/5 px-3 py-1.5 rounded-md hover:bg-primary/10"
                         >
-                            Scorecard
-                            <svg className="w-4 h-4 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            View Scorecard
+                            <svg className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
                         </Link>
-                    ) : null}
-                </CardFooter>
+                    </CardFooter>
+                )}
             </Card>
         </div>
     )
