@@ -17,15 +17,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     return (
         <Card className='flex flex-col h-full relative overflow-hidden bg-[#000000] backdrop-blur-md border border-accent/50 hover:border-accent transition-all duration-500 group hover:scale-[1.02] transform-gpu'>
             <CardHeader className="relative z-10">
-                <CardTitle className="text-xl font-bold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent group-hover:from-secondary group-hover:to-accent transition-all duration-300">{project.name}</CardTitle>
+                <CardTitle className="text-lg font-bold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent group-hover:from-secondary group-hover:to-accent transition-all duration-300">{project.name}</CardTitle>
                 {project.techStack && project.techStack.length ? (
                     <div className="mt-3">
-                        <p className="text-xs text-muted-foreground mb-2 font-mono uppercase tracking-wider">Tech Stack</p>
+                        <p className="text-[10px] text-muted-foreground mb-2 font-mono uppercase tracking-wider">Tech Stack</p>
                         <div className="flex flex-wrap gap-2">
                             {project.techStack.map((tech, index) => (
                                 <span
                                     key={index}
-                                    className="px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r from-accent/10 to-accent/5 border border-accent/30 text-accent hover:bg-accent/20 hover:border-accent/50 transition-all duration-300 hover:scale-105 transform-gpu"
+                                    className="text-[10px] font-medium text-accent/80 hover:text-accent transition-colors"
                                 >
                                     {tech}
                                 </span>
@@ -36,14 +36,14 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             </CardHeader>
 
             <CardContent className="flex-1 relative z-10">
-                <p className="text-foreground/90 leading-relaxed">{project.description}</p>
+                <p className="text-sm text-foreground/90 leading-relaxed">{project.description}</p>
             </CardContent>
 
             <CardFooter className="border-t border-border/30 pt-4 flex gap-4 relative z-10 bg-[#000000]/50 backdrop-blur-sm">
                 {project.link ? (
                     <Link
                         href={project.link}
-                        className='text-secondary hover:text-accent transition-all duration-300 font-medium flex items-center gap-1.5 group/link hover:underline underline-offset-4'
+                        className='text-sm text-secondary hover:text-accent transition-all duration-300 font-medium flex items-center gap-1.5 group/link hover:underline underline-offset-4'
                         target="_blank"
                         rel="noopener noreferrer"
                     >
@@ -57,7 +57,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 {project.githubUrl ? (
                     <Link
                         href={project.githubUrl}
-                        className='text-secondary hover:text-accent transition-all duration-300 font-medium flex items-center gap-1.5 group/link hover:underline underline-offset-4'
+                        className='text-sm text-secondary hover:text-accent transition-all duration-300 font-medium flex items-center gap-1.5 group/link hover:underline underline-offset-4'
                         target="_blank"
                         rel="noopener noreferrer"
                     >
