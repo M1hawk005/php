@@ -89,9 +89,9 @@ export default function ReplyForm({ threadId }: ReplyFormProps) {
             setContent('');
             setImage(null);
             router.refresh();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Error creating reply:', err);
-            setError(err.message || 'Failed to post reply');
+            setError(err instanceof Error ? err.message : 'Failed to post reply');
         } finally {
             setIsSubmitting(false);
         }

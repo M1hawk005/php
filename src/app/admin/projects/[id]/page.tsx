@@ -72,9 +72,9 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
 
             router.push('/admin/projects');
             router.refresh();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Error updating project:', err);
-            setError(err.message);
+            setError(err instanceof Error ? err.message : 'Failed to update project');
         } finally {
             setSaving(false);
         }

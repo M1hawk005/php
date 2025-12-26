@@ -61,7 +61,7 @@ export default function ContactPage() {
                                 </svg>
                             </div>
                             <h3 className="text-2xl font-bold text-white">Message Sent!</h3>
-                            <p className="text-gray-400">Thanks for reaching out. I'll get back to you soon.</p>
+                            <p className="text-gray-400">Thanks for reaching out. I&apos;ll get back to you soon.</p>
                             <button
                                 onClick={() => setSuccess(false)}
                                 className="mt-6 px-6 py-2 bg-[#222] hover:bg-[#333] text-white rounded-lg transition-colors border border-[#444]"

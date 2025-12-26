@@ -11,7 +11,7 @@ export default function EndSection() {
                 </h3>
 
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                    These are just the highlights. I've built many more projects exploring different technologies,
+                    These are just the highlights. I&apos;ve built many more projects exploring different technologies,
                     solving unique problems, and pushing creative boundaries.
                 </p>
 

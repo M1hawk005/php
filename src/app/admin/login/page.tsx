@@ -28,9 +28,9 @@ export default function AdminLoginPage() {
             router.push('/admin');
             router.refresh();
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Login error:', err);
-            setError(err.message || 'Failed to login');
+            setError(err instanceof Error ? err.message : 'Failed to login');
         } finally {
             setLoading(false);
         }
@@ -73,8 +73,8 @@ export default function AdminLoginPage() {
                 router.push('/admin');
                 router.refresh();
             }
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'An error occurred');
         } finally {
             setLoading(false);
         }

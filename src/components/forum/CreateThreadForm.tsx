@@ -70,9 +70,9 @@ export default function CreateThreadForm() {
             setImage(null);
             setIsOpen(false);
             router.refresh();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Error creating thread:', err);
-            setError(err.message || 'Failed to create thread');
+            setError(err instanceof Error ? err.message : 'Failed to create thread');
         } finally {
             setIsSubmitting(false);
         }
