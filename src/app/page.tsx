@@ -112,7 +112,7 @@ export default async function HomePage() {
         />
         {/* Intro Section */}
         <section className="h-screen w-full snap-start flex flex-col justify-center items-start text-left p-8 md:p-24 pb-20 relative max-w-7xl mx-auto overflow-hidden">
-          <span className="text-accent font-mono mb-4 text-lg">Hi, my name is</span>
+          <span className="text-muted-foreground font-mono mb-4 text-lg">Hi, my name is</span>
           <h1 className="text-6xl md:text-8xl font-bold text-foreground mb-4">
             {intro.name}.
           </h1>
@@ -122,12 +122,12 @@ export default async function HomePage() {
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed">
             {intro.html_text}
           </p>
-          <Link
-            href="/contact"
-            className="px-7 py-3 border border-accent text-accent rounded hover:bg-accent/10 transition-colors font-mono"
+          <a
+            href="#contact"
+            className="px-7 py-3 border border-border text-foreground rounded hover:border-accent hover:text-accent hover:bg-accent/10 transition-colors font-mono"
           >
             Get In Touch
-          </Link>
+          </a>
 
           <div className="absolute bottom-25 left-1/2 -translate-x-1/2 animate-bounce">
             <ChevronDown className="text-muted-foreground w-8 h-8" />
@@ -158,7 +158,7 @@ export default async function HomePage() {
                 />
               </div>
               {/* Decorative Frame */}
-              <div className="absolute top-5 left-5 w-64 h-64 md:w-80 md:h-80 border-2 border-accent rounded z-0 group-hover:top-3 group-hover:left-3 transition-all duration-300"></div>
+              <div className="absolute top-5 left-5 w-64 h-64 md:w-80 md:h-80 border-2 border-border rounded z-0 group-hover:top-3 group-hover:left-3 group-hover:border-accent transition-all duration-300"></div>
             </div>
           </div>
         </section>

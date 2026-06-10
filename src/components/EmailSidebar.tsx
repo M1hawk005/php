@@ -10,7 +10,7 @@ export default function EmailSidebar({ email }: EmailSidebarProps) {
             {email && (
                 <Link
                     href={`mailto:${email}`}
-                    className="text-muted-foreground hover:text-accent hover:-translate-y-1 transition-all duration-300 vertical-text tracking-widest text-sm font-mono"
+                    className="text-muted-foreground hover:text-primary hover:-translate-y-1 transition-all duration-300 vertical-text tracking-widest text-sm font-mono"
                     style={{ writingMode: 'vertical-rl' }}
                 >
                     {email}

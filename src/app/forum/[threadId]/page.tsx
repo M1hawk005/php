@@ -26,7 +26,7 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
         return (
             <main className="min-h-screen pt-24 pb-12 px-4 md:px-8 max-w-4xl mx-auto text-center">
                 <h1 className="text-2xl font-bold text-red-500 mb-4">Thread Not Found</h1>
-                <Link href="/forum" className="text-primary hover:underline">
+                <Link href="/forum" className="text-foreground hover:text-primary hover:underline">
                     &larr; Back to Board
                 </Link>
             </main>
@@ -51,7 +51,7 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
                     <ArrowLeft size={16} />
                     Back to Board
                 </Link>
-                <h1 className="text-2xl md:text-3xl font-bold text-primary break-words">
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground break-words">
                     {thread.title || "Untitled Thread"}
                 </h1>
             </div>

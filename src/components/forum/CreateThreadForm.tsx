@@ -92,7 +92,7 @@ export default function CreateThreadForm() {
     return (
         <div className="bg-card border border-border rounded-md p-6 mb-8">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-bold text-primary">New Thread</h3>
+                <h3 className="text-lg font-bold text-foreground">New Thread</h3>
                 <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
                     <X size={20} />
                 </button>

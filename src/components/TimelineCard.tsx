@@ -32,14 +32,14 @@ export default function TimelineCard({ timeline, position = "left" }: TimelineCa
                             </CardTitle>
                             {timeline.institution ? (
                                 <CardDescription className="text-muted-foreground flex items-center gap-2 text-sm">
-                                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-secondary/70"></span>
+                                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-border"></span>
                                     {`${timeline.institution.name}, ${timeline.institution.location}`}
                                 </CardDescription>
                             ) : null}
                         </div>
 
                         {timeline.duration ? (
-                            <div className="shrink-0 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-xs font-mono font-medium text-secondary">
+                            <div className="shrink-0 px-3 py-1 rounded-full bg-muted/50 border border-border text-xs font-mono font-medium text-muted-foreground">
                                 {timeline.duration}
                             </div>
                         ) : null}
@@ -58,7 +58,7 @@ export default function TimelineCard({ timeline, position = "left" }: TimelineCa
                             href={timeline.marksheetUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5 group/link bg-primary/5 px-3 py-1.5 rounded-md hover:bg-primary/10"
+                            className="text-xs font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 group/link bg-muted/50 px-3 py-1.5 rounded-md hover:bg-primary/10"
                         >
                             View Scorecard
                             <svg className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

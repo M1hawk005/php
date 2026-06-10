@@ -15,9 +15,9 @@ type ProjectCardProps = {
 
 export default function ProjectCard({ project }: ProjectCardProps) {
     return (
-        <Card className='flex flex-col h-full relative overflow-hidden bg-[#000000] backdrop-blur-md border border-accent/50 hover:border-accent transition-all duration-500 group hover:scale-[1.02] transform-gpu'>
+        <Card className='flex flex-col h-full relative overflow-hidden bg-background backdrop-blur-md border border-border/50 hover:border-primary/50 transition-all duration-500 group hover:scale-[1.02] transform-gpu'>
             <CardHeader className="relative z-10">
-                <CardTitle className="text-lg font-bold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent group-hover:from-secondary group-hover:to-accent transition-all duration-300">{project.name}</CardTitle>
+                <CardTitle className="text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300">{project.name}</CardTitle>
                 {project.techStack && project.techStack.length ? (
                     <div className="mt-3">
                         <p className="text-[10px] text-muted-foreground mb-2 font-mono uppercase tracking-wider">Tech Stack</p>
@@ -25,7 +25,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                             {project.techStack.map((tech, index) => (
                                 <span
                                     key={index}
-                                    className="text-[10px] font-medium text-accent/80 hover:text-accent transition-colors"
+                                    className="text-[10px] font-medium text-muted-foreground hover:text-primary transition-colors"
                                 >
                                     {tech}
                                 </span>
@@ -39,11 +39,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 <p className="text-sm text-foreground/90 leading-relaxed">{project.description}</p>
             </CardContent>
 
-            <CardFooter className="border-t border-border/30 pt-4 flex gap-4 relative z-10 bg-[#000000]/50 backdrop-blur-sm">
+            <CardFooter className="border-t border-border/30 pt-4 flex gap-4 relative z-10 bg-background/50 backdrop-blur-sm">
                 {project.link ? (
                     <Link
                         href={project.link}
-                        className='text-sm text-secondary hover:text-accent transition-all duration-300 font-medium flex items-center gap-1.5 group/link hover:underline underline-offset-4'
+                        className='text-sm text-muted-foreground hover:text-primary transition-all duration-300 font-medium flex items-center gap-1.5 group/link hover:underline underline-offset-4'
                         target="_blank"
                         rel="noopener noreferrer"
                     >
@@ -57,7 +57,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 {project.githubUrl ? (
                     <Link
                         href={project.githubUrl}
-                        className='text-sm text-secondary hover:text-accent transition-all duration-300 font-medium flex items-center gap-1.5 group/link hover:underline underline-offset-4'
+                        className='text-sm text-muted-foreground hover:text-primary transition-all duration-300 font-medium flex items-center gap-1.5 group/link hover:underline underline-offset-4'
                         target="_blank"
                         rel="noopener noreferrer"
                     >

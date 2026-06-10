@@ -82,7 +82,7 @@ export default function Post({ id, content, imageUrl, createdAt, isOp = false, i
     return (
         <div className={`p-4 mb-4 rounded-md border ${isOp ? 'border-primary/50 bg-primary/5' : 'border-border bg-card'} overflow-hidden group`}>
             <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
-                <span className="font-bold text-primary">Anonymous</span>
+                <span className="font-bold text-foreground">Anonymous</span>
                 <span>{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</span>
                 <span className="text-xs opacity-50">No. {id.slice(0, 8)}</span>
                 {index !== undefined && <span className="ml-auto">#{index + 1}</span>}

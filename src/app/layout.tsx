@@ -1,35 +1,20 @@
 import Header from '@/components/Header'
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { supabase } from '@/lib/supabaseClient';
-import localFont from 'next/font/local'
 import "./globals.css";
 import NextTopLoader from 'nextjs-toploader';
+import ContactModal from '@/components/ContactModal';
 
-const headingFont = localFont({
-  src: [
-    { path: '../../public/fonts/GohuFontuni14NerdFont-Regular.ttf' },
-    { path: '../../public/fonts/3270NerdFontMono-SemiCondensed.ttf' },
-  ],
-  variable: '--font-heading',
-  display: 'swap',
-})
+const geistSans = Geist({
+  variable: "--font-sans",
+  subsets: ["latin"],
+});
 
-const bodyFont = localFont({
-  src: '../../public/fonts/HackNerdFontMono-Regular.ttf',
-  variable: '--font-body',
-  display: 'swap',
-})
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+const geistMono = Geist_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Aditya Malik",
@@ -64,11 +49,12 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${bodyFont.className} ${headingFont.variable} antialiased`}
+        className={`${geistSans.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextTopLoader color="#73daca" showSpinner={false} />
         <Header resumeUrl={resumeUrl} />
         {children}
+        <ContactModal />
       </body>
     </html>
   );

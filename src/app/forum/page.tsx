@@ -17,7 +17,7 @@ export default async function ForumPage() {
     return (
         <main className="min-h-screen pt-28 pb-12 px-4 md:px-8 max-w-7xl mx-auto">
             <div className="mb-8 text-center">
-                <h1 className="text-4xl font-bold text-primary mb-2 font-mono">/forum/</h1>
+                <h1 className="text-4xl font-bold text-foreground mb-2 font-mono">/forum/</h1>
                 <p className="text-muted-foreground">Anonymous Board. Be nice.</p>
             </div>
 

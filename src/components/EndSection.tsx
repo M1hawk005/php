@@ -17,7 +17,7 @@ export default function EndSection() {
 
                 <Link
                     href="/projects"
-                    className="px-7 py-3 border border-accent text-accent rounded hover:bg-accent/10 transition-colors font-mono mt-4"
+                    className="px-7 py-3 border border-border text-foreground rounded hover:border-accent hover:text-accent hover:bg-accent/10 transition-colors font-mono mt-4"
                 >
                     View All Projects
                 </Link>

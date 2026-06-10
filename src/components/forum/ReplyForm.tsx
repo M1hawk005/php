@@ -99,7 +99,7 @@ export default function ReplyForm({ threadId }: ReplyFormProps) {
 
     return (
         <div className="bg-card border border-border rounded-md p-6 mt-8">
-            <h3 className="text-lg font-bold text-primary mb-4">Post a Reply</h3>
+            <h3 className="text-lg font-bold text-foreground mb-4">Post a Reply</h3>
 
             {error && (
                 <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-3 rounded mb-4 text-sm">

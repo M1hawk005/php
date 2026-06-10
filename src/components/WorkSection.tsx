@@ -66,9 +66,9 @@ export default function WorkSection({
     // Determine header color based on active section
     const getHeaderColor = () => {
         switch (activeSection) {
-            case "Experience": return "text-primary";
-            case "Education": return "text-secondary";
-            case "Featured Projects": return "text-accent";
+            case "Experience": return "text-foreground";
+            case "Education": return "text-foreground";
+            case "Featured Projects": return "text-foreground";
             default: return "text-foreground";
         }
     };
@@ -97,7 +97,7 @@ export default function WorkSection({
                     <div ref={experienceRef} className="min-h-full w-full snap-start flex flex-col p-8 md:p-24 pt-4">
                         <div className="w-full max-w-5xl mx-auto h-full flex flex-col relative">
                             {/* Central Timeline Line */}
-                            <div className="absolute left-1/2 top-0 bottom-24 w-0.5 bg-gradient-to-b from-primary/50 via-border/30 to-transparent -translate-x-1/2 hidden md:block"></div>
+                            <div className="absolute left-1/2 top-0 bottom-24 w-0.5 bg-gradient-to-b from-border via-border/30 to-transparent -translate-x-1/2 hidden md:block"></div>
 
                             <div className="w-full space-y-12 flex-1 pb-24">
                                 {experienceData && experienceData.length > 0 ? (
@@ -123,7 +123,7 @@ export default function WorkSection({
                     <div ref={educationRef} className="min-h-full w-full snap-start flex flex-col p-8 md:p-24 pt-4">
                         <div className="w-full max-w-5xl mx-auto h-full flex flex-col relative">
                             {/* Central Timeline Line */}
-                            <div className="absolute left-1/2 top-0 bottom-24 w-0.5 bg-gradient-to-b from-secondary/50 via-border/30 to-transparent -translate-x-1/2 hidden md:block"></div>
+                            <div className="absolute left-1/2 top-0 bottom-24 w-0.5 bg-gradient-to-b from-border via-border/30 to-transparent -translate-x-1/2 hidden md:block"></div>
 
                             <div className="w-full space-y-12 flex-1 pb-24">
                                 {educationData && educationData.length > 0 ? (

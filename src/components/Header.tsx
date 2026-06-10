@@ -15,7 +15,7 @@ type HeaderProps = {
     resumeUrl: string | null;
 }
 
-import { ChevronDown, ChevronUp, Home } from "lucide-react";
+import { ChevronDown, ChevronUp, Home, Mail } from "lucide-react";
 
 import { usePathname } from "next/navigation";
 
@@ -42,10 +42,10 @@ export default function Header({ resumeUrl }: HeaderProps) {
     }
 
     const getBorderColor = () => {
-        if (pathname === '/projects') return 'border-[var(--nav-green)]';
-        if (pathname === '/forum') return 'border-[var(--nav-purple)]';
-        if (pathname === '/contact') return 'border-[var(--nav-cyan)]';
-        if (pathname === '/') return 'border-primary';
+        if (pathname === '/projects') return 'border-border';
+        if (pathname === '/forum') return 'border-border';
+        if (pathname === '/contact') return 'border-border';
+        if (pathname === '/') return 'border-border';
         return 'border-border';
     };
 
@@ -73,7 +73,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
                         className={cn(
                             "ml-16 p-2 transition-all duration-300 rounded-md group",
                             pathname === "/"
-                                ? "text-primary"
+                                ? "text-foreground"
                                 : "text-muted-foreground hover:text-primary"
                         )}
                         aria-label="Home"
@@ -95,7 +95,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                         href="/projects"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "transition-colors hover:!bg-[var(--nav-green)] hover:!text-primary-foreground focus:!bg-[var(--nav-green)] focus:!text-primary-foreground",
+                                            "w-24 justify-center transition-colors hover:!bg-[var(--nav-green)] hover:!text-primary-foreground focus:!bg-[var(--nav-green)] focus:!text-primary-foreground",
                                             pathname === "/projects" ? "!bg-[var(--nav-green)] !text-primary-foreground" : "bg-transparent"
                                         )}
                                     >
@@ -109,7 +109,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                         href="/forum"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "transition-colors hover:!bg-[var(--nav-purple)] hover:!text-primary-foreground focus:!bg-[var(--nav-purple)] focus:!text-primary-foreground",
+                                            "w-24 justify-center transition-colors hover:!bg-[var(--nav-purple)] hover:!text-primary-foreground focus:!bg-[var(--nav-purple)] focus:!text-primary-foreground",
                                             pathname === "/forum" ? "!bg-[var(--nav-purple)] !text-primary-foreground" : "bg-transparent"
                                         )}
                                     >
@@ -119,16 +119,16 @@ export default function Header({ resumeUrl }: HeaderProps) {
                             </NavigationMenuItem>
                             <NavigationMenuItem>
                                 <NavigationMenuLink asChild>
-                                    <Link
-                                        href="/contact"
+                                    <a
+                                        href="#contact"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "transition-colors hover:!bg-[var(--nav-cyan)] hover:!text-primary-foreground focus:!bg-[var(--nav-cyan)] focus:!text-primary-foreground",
-                                            pathname === "/contact" ? "!bg-[var(--nav-cyan)] !text-primary-foreground" : "bg-transparent"
+                                            "transition-colors hover:!bg-[var(--nav-cyan)] hover:!text-primary-foreground focus:!bg-[var(--nav-cyan)] focus:!text-primary-foreground group px-3"
                                         )}
+                                        aria-label="Contact"
                                     >
-                                        Contact
-                                    </Link>
+                                        <Mail size={18} className="transition-transform group-hover:scale-110" />
+                                    </a>
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
@@ -139,7 +139,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                         rel="noopener noreferrer"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "bg-transparent border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                                            "w-24 justify-center bg-transparent border border-border text-foreground hover:border-primary hover:text-primary hover:bg-primary/10 transition-all duration-300"
                                         )}
                                     >
                                         Resume

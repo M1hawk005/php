@@ -14,7 +14,7 @@ export default function SocialSidebar({ github, linkedin }: SocialSidebarProps) 
                     <Link
                         href={github}
                         target="_blank"
-                        className="text-muted-foreground hover:text-accent hover:-translate-y-1 transition-all duration-300"
+                        className="text-muted-foreground hover:text-primary hover:-translate-y-1 transition-all duration-300"
                     >
                         <Github size={20} />
                     </Link>
@@ -23,7 +23,7 @@ export default function SocialSidebar({ github, linkedin }: SocialSidebarProps) 
                     <Link
                         href={linkedin}
                         target="_blank"
-                        className="text-muted-foreground hover:text-accent hover:-translate-y-1 transition-all duration-300"
+                        className="text-muted-foreground hover:text-primary hover:-translate-y-1 transition-all duration-300"
                     >
                         <Linkedin size={20} />
                     </Link>
