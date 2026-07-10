@@ -20,7 +20,7 @@ export default async function BlogPage({ params }: { params: Promise<{ slug: str
 
     return (
         <main className="min-h-screen pt-28 pb-12 px-4 md:px-8 max-w-3xl mx-auto">
-            <Link href="/blogs" className="text-muted-foreground hover:text-primary mb-8 inline-flex items-center transition-colors">
+            <Link href="/blog" className="text-muted-foreground hover:text-primary mb-8 inline-flex items-center transition-colors">
                 &larr; Back to Blogs
             </Link>
             <article className="prose prose-invert lg:prose-xl mx-auto mt-8">

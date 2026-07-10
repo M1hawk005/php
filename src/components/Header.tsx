@@ -92,11 +92,11 @@ export default function Header({ resumeUrl }: HeaderProps) {
                             <NavigationMenuItem>
                                 <NavigationMenuLink asChild>
                                     <Link
-                                        href="/blogs"
+                                        href="/blog"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
                                             "w-24 justify-center transition-colors hover:!bg-[var(--nav-cyan)] hover:!text-primary-foreground focus:!bg-[var(--nav-cyan)] focus:!text-primary-foreground",
-                                            pathname.startsWith("/blogs") ? "!bg-[var(--nav-cyan)] !text-primary-foreground" : "bg-transparent"
+                                            pathname.startsWith("/blog") ? "!bg-[var(--nav-cyan)] !text-primary-foreground" : "bg-transparent"
                                         )}
                                     >
                                         Blog

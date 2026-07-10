@@ -103,7 +103,7 @@ export function getProjectBySlug(slug: string) {
 }
 
 export function getBlogs() {
-    const blogsDir = path.join(contentDir, 'blogs');
+    const blogsDir = path.join(contentDir, 'blog');
     try {
         const fileNames = fs.readdirSync(blogsDir);
         const blogs = fileNames.filter(name => name.endsWith('.md')).map(fileName => {
@@ -130,7 +130,7 @@ export function getBlogs() {
 }
 
 export function getBlogBySlug(slug: string) {
-    const filePath = path.join(contentDir, 'blogs', `${slug}.md`);
+    const filePath = path.join(contentDir, 'blog', `${slug}.md`);
     try {
         const fileContents = fs.readFileSync(filePath, 'utf8');
         const { data, content } = matter(fileContents);

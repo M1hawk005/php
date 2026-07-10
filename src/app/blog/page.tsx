@@ -14,7 +14,7 @@ export default async function BlogsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {blogs.map((blog) => (
-                    <Link key={blog.slug} href={`/blogs/${blog.slug}`} className="block group">
+                    <Link key={blog.slug} href={`/blog/${blog.slug}`} className="block group">
                         <Card className='flex flex-col h-full bg-background backdrop-blur-md border border-border/50 group-hover:border-primary/50 transition-all duration-300 transform-gpu group-hover:-translate-y-1'>
                             <CardHeader>
                                 <div className="text-xs text-muted-foreground mb-2 font-mono">{blog.frontmatter.date}</div>
