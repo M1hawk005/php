@@ -25,7 +25,7 @@ Welcome to the source code of my personal portfolio and web platform. This proje
 
 ### 1. Clone the repository
 ```bash
-git clone <repository_url>
+git clone https://github.com/M1hawk005/php.git
 cd php
 ```
 
@@ -65,10 +65,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 All personal content is managed statically in the `content/` folder:
 - `content/projects/*.md` - Project detail pages and cards
-- `content/blogs/*.md` - Blog feed and individual blog posts
-- `content/site/experience.md` - Work experience timeline
-- `content/site/education.md` - Education timeline
-- `content/site/home.md` - Homepage hero section content
+- `content/blog/*.md` - Blog feed and individual blog posts
+- `content/site/home.md` - Homepage content including Hero, Bio, Experience, and Education timelines
 
 Profile picture and resume should be placed in `public/avatar.png` and `public/resume.pdf` respectively.
 

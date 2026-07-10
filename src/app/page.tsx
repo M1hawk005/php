@@ -39,11 +39,11 @@ export default async function HomePage() {
     <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-background text-foreground relative scroll-smooth no-scrollbar overscroll-y-none [&::-webkit-scrollbar]:hidden">
       <main className="w-full">
         <SocialSidebar
-          github="https://github.com/yourusername"
-          linkedin="https://linkedin.com/in/yourusername"
+          github="https://github.com/M1hawk005"
+          linkedin="http://www.linkedin.com/in/aditya-m-920aa020a"
         />
         <EmailSidebar
-          email="your.email@example.com"
+          email="aditya.malik32x@gmail.com"
         />
         {/* Intro Section */}
         <section className="h-screen w-full snap-start flex flex-col justify-center items-start text-left p-8 md:p-24 pb-20 relative max-w-7xl mx-auto overflow-hidden">

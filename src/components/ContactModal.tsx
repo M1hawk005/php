@@ -41,21 +41,11 @@ export default function ContactModal() {
         setError(null);
         setSuccess(false);
 
-        const formData = new FormData(e.currentTarget);
-        
-        try {
-            const result = await sendMessage(formData);
-
-            if (result.error) throw new Error(result.error);
-
-            setSuccess(true);
-            (e.target as HTMLFormElement).reset();
-        } catch (err) {
-            console.error('Error sending message:', err);
-            setError('Failed to send message. Please try again.');
-        } finally {
+        // Simulate network delay
+        setTimeout(() => {
+            setError('This feature is currently under work. Please use the email link directly.');
             setLoading(false);
-        }
+        }, 800);
     }
 
     if (!isOpen) return null;
