@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabaseClient";
+import { prisma } from "@/lib/prisma";
 import Post from "@/components/forum/Post";
 import ReplyForm from "@/components/forum/ReplyForm";
 import Link from "next/link";
@@ -16,13 +16,16 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
     const { threadId } = await params;
 
     // Fetch thread details (OP)
-    const { data: thread, error: threadError } = await supabase
-        .from('threads')
-        .select('*')
-        .eq('id', threadId)
-        .single();
+    const thread = await prisma.thread.findUnique({
+        where: { id: threadId },
+        include: {
+            posts: {
+                orderBy: { created_at: 'asc' }
+            }
+        }
+    });
 
-    if (threadError || !thread) {
+    if (!thread) {
         return (
             <main className="min-h-screen pt-24 pb-12 px-4 md:px-8 max-w-4xl mx-auto text-center">
                 <h1 className="text-2xl font-bold text-red-500 mb-4">Thread Not Found</h1>
@@ -33,16 +36,7 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
         );
     }
 
-    // Fetch replies
-    const { data: posts, error: postsError } = await supabase
-        .from('posts')
-        .select('*')
-        .eq('thread_id', threadId)
-        .order('created_at', { ascending: true });
-
-    if (postsError) {
-        console.error("Error fetching posts:", postsError);
-    }
+    const posts = thread.posts;
 
     return (
         <main className="min-h-screen pt-24 pb-12 px-4 md:px-8 max-w-4xl mx-auto">
@@ -62,7 +56,7 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
                     id={thread.id}
                     content={thread.content}
                     imageUrl={thread.image_url}
-                    createdAt={thread.created_at}
+                    createdAt={thread.created_at.toISOString()}
                     isOp={true}
                     index={0}
                 />
@@ -74,7 +68,7 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
                         id={post.id}
                         content={post.content}
                         imageUrl={post.image_url}
-                        createdAt={post.created_at}
+                        createdAt={post.created_at.toISOString()}
                         index={index + 1}
                     />
                 ))}

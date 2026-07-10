@@ -1,114 +1,49 @@
-import { supabase } from "@/lib/supabaseClient";
+import { getHomeContent, getProjects } from "@/lib/markdown";
 import TimelineCard from "@/components/TimelineCard";
-import { Timeline } from "@/data/timeline";
 import ProjectCard from "@/components/ProjectCard";
-import type { Project } from "@/data/projects";
 import Image from "next/image";
-import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import SocialSidebar from "@/components/SocialSidebar";
 import EmailSidebar from "@/components/EmailSidebar";
 import WorkSection from "@/components/WorkSection";
 import EndSection from "@/components/EndSection";
+import ReactMarkdown from 'react-markdown';
+
 export default async function HomePage() {
+  const content = getHomeContent() as any;
+  const projects = getProjects();
 
-  //fetching data from the database   
-  const { data: siteContentData, error: siteContentError } = await supabase// fetch bio data
-    .from('site_content')
-    .select('value')
-    .eq('key', 'about_bio')
-    .single(); // cuz only expect one row
+  // Highlighted projects
+  const highlightedProjectsData = projects
+    .filter(p => p.frontmatter.isHighlighted)
+    .map(p => ({
+        id: p.slug,
+        name: p.frontmatter.title || p.slug,
+        description: p.frontmatter.description || p.content.slice(0, 100),
+        link: p.frontmatter.link || '',
+        githubUrl: p.frontmatter.githubUrl || '',
+        techStack: p.frontmatter.techStack || [],
+        slug: p.slug
+    }))
+    .slice(0, 3);
 
-  if (siteContentError || !siteContentData) {
-    return <p className='test-center p-8'>Could not load bio data.</p>
-  }
-
-  const siteContent = siteContentData?.value;// get JSON object
-
-  const { data: educationData, error: educationError } = await supabase// fetch education data
-    .from('timeline')
-    .select('*')
-    .eq('category', 'education');
-
-  if (educationError) {
-    console.error("Error fetching education data:", educationError)
-
-    return <p className="text-center p-8">Error loading education data.</p>
-  }
-
-
-  const { data: experienceData, error: experienceError } = await supabase// fetch experience data
-    .from('timeline')
-    .select('*')
-    .eq('category', 'experience');
-
-  if (experienceError) {
-    console.error("Error fetching experience data:", experienceError)
-
-    return <p className="text-center p-8">Error loading experience data.</p>
-  }
-
-  const { data: highlightedProjectsData, error: highlightedProjectsError } = await supabase// fetch highlighted projects
-    .from('projects')
-    .select('*')
-    .eq('isHighlighted', true);
-
-  if (highlightedProjectsError) {
-    console.error("Erro fetching highlighed projects:", highlightedProjectsError.message);
-  }
-
-  const { data: profilePictureData, error: profilePictureError } = await supabase//fetch profile picture
-    .from('site_content')
-    .select('value')
-    .eq('key', 'profile_picture')
-    .single();//cuz only one row
-
-  if (profilePictureError || !profilePictureData) {
-    return <p className="test-center p-8">Could not load Profile Picture</p>
-  }
-
-  const profileImageUrl =
-    typeof profilePictureData.value === "string"
-      ? profilePictureData.value
-      : profilePictureData.value?.url ?? "/avatar.jpg";
-
-
-  // Fetch Intro Data
-  const { data: introData } = await supabase
-    .from('site_content')
-    .select('value')
-    .eq('key', 'intro')
-    .single();
+  const profileImageUrl = "/avatar.png"; // Statically served
 
   let intro = {
     name: "Aditya Malik",
     bio: "Software Engineer",
-    html_text: "Welcome to my portfolio."
+    html_text: content.intro || "Welcome to my portfolio."
   };
-
-  if (introData?.value) {
-    if (typeof introData.value === 'string') {
-      try {
-        intro = JSON.parse(introData.value);
-      } catch (e) {
-        console.error("Failed to parse intro JSON", e);
-      }
-    } else {
-      intro = introData.value;
-    }
-  }
 
   return (
     <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-background text-foreground relative scroll-smooth no-scrollbar overscroll-y-none [&::-webkit-scrollbar]:hidden">
-
-
       <main className="w-full">
         <SocialSidebar
-          github={siteContent?.github || ""}
-          linkedin={siteContent?.linkedin || ""}
+          github="https://github.com/yourusername"
+          linkedin="https://linkedin.com/in/yourusername"
         />
         <EmailSidebar
-          email={siteContent?.email || ""}
+          email="your.email@example.com"
         />
         {/* Intro Section */}
         <section className="h-screen w-full snap-start flex flex-col justify-center items-start text-left p-8 md:p-24 pb-20 relative max-w-7xl mx-auto overflow-hidden">
@@ -119,9 +54,9 @@ export default async function HomePage() {
           <h2 className="text-4xl md:text-4xl font-bold text-muted-foreground mb-8">
             {intro.bio}.
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed">
-            {intro.html_text}
-          </p>
+          <div className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed prose prose-invert">
+            <ReactMarkdown>{intro.html_text}</ReactMarkdown>
+          </div>
           <a
             href="#contact"
             className="px-7 py-3 border border-border text-foreground rounded hover:border-accent hover:text-accent hover:bg-accent/10 transition-colors font-mono"
@@ -142,8 +77,8 @@ export default async function HomePage() {
               <h2 className="flex items-center text-3xl md:text-4xl font-bold text-foreground">
                 About Me
               </h2>
-              <div className="text-lg md:text-xl leading-relaxed text-muted-foreground space-y-4">
-                <p>{siteContent ? siteContent.text : 'Loading bio....'}</p>
+              <div className="text-lg md:text-xl leading-relaxed text-muted-foreground space-y-4 prose prose-invert">
+                <ReactMarkdown>{content.bio || 'Loading bio....'}</ReactMarkdown>
               </div>
             </div>
 
@@ -165,8 +100,8 @@ export default async function HomePage() {
 
         {/* Continuous Scroll Work Section */}
         <WorkSection
-          experienceData={experienceData}
-          educationData={educationData}
+          experienceData={content.experience || []}
+          educationData={content.education || []}
           highlightedProjectsData={highlightedProjectsData}
         />
 

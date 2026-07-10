@@ -1,17 +1,17 @@
-import { supabase } from "@/lib/supabaseClient";
+import { prisma } from "@/lib/prisma";
 import ThreadCard from "@/components/forum/ThreadCard";
 import CreateThreadForm from "@/components/forum/CreateThreadForm";
 
 export const revalidate = 0; // Disable caching for real-time feel
 
 export default async function ForumPage() {
-    const { data: threads, error } = await supabase
-        .from('threads')
-        .select('*')
-        .order('bumped_at', { ascending: false });
-
-    if (error) {
-        console.error("Error fetching threads:", JSON.stringify(error, null, 2));
+    let threads: any[] = [];
+    try {
+        threads = await prisma.thread.findMany({
+            orderBy: { bumped_at: 'desc' }
+        });
+    } catch (error) {
+        console.error("Error fetching threads:", error);
     }
 
     return (
@@ -34,7 +34,7 @@ export default async function ForumPage() {
                             title={thread.title}
                             content={thread.content}
                             imageUrl={thread.image_url}
-                            createdAt={thread.created_at}
+                            createdAt={thread.created_at.toISOString()}
                             replyCount={thread.reply_count || 0}
                         />
                     ))

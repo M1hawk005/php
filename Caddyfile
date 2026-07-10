@@ -1,0 +1,11 @@
+# Caddyfile
+# Replace example.com with your domain name
+
+localhost {
+    reverse_proxy app:3000
+}
+
+# When deploying to a VPS, use:
+# example.com {
+#     reverse_proxy app:3000
+# }

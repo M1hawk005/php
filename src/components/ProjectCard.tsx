@@ -17,7 +17,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     return (
         <Card className='flex flex-col h-full relative overflow-hidden bg-background backdrop-blur-md border border-border/50 hover:border-primary/50 transition-all duration-500 group hover:scale-[1.02] transform-gpu'>
             <CardHeader className="relative z-10">
-                <CardTitle className="text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300">{project.name}</CardTitle>
+                <Link href={`/projects/${project.slug || project.id}`} className="absolute inset-0 z-10" aria-label={`View details for ${project.name}`}></Link>
+                <CardTitle className="text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300 relative z-0">{project.name}</CardTitle>
                 {project.techStack && project.techStack.length ? (
                     <div className="mt-3">
                         <p className="text-[10px] text-muted-foreground mb-2 font-mono uppercase tracking-wider">Tech Stack</p>
@@ -39,7 +40,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 <p className="text-sm text-foreground/90 leading-relaxed">{project.description}</p>
             </CardContent>
 
-            <CardFooter className="border-t border-border/30 pt-4 flex gap-4 relative z-10 bg-background/50 backdrop-blur-sm">
+            <CardFooter className="border-t border-border/30 pt-4 flex gap-4 relative z-20 bg-background/50 backdrop-blur-sm pointer-events-auto">
                 {project.link ? (
                     <Link
                         href={project.link}

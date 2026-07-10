@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  link        String?
+  techStack     String[]
+  githubUrl     String?
+  isHighlighted Boolean  @default(false)
+  created_at    DateTime @default(now())
+
+  @@map("projects")
+}
+
+model Message {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  email      String
+  message    String
+  created_at DateTime @default(now())
+
+  @@map("messages")
+}
+
+model SiteContent {
+  key        String   @id
+  value      Json
+  created_at DateTime @default(now())
+
+  @@map("site_content")
+}
+
+model Thread {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  content     String
+  image_url   String?
+  reply_count Int      @default(0)
+  secret_key  String?
+  created_at  DateTime @default(now())
+  bumped_at   DateTime @default(now())
+  posts       Post[]
+
+  @@map("threads")
+}
+
+model Post {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  thread_id  String   @db.Uuid
+  content    String
+  image_url  String?
+  secret_key String?
+  created_at DateTime @default(now())
+  thread     Thread   @relation(fields: [thread_id], references: [id], onDelete: Cascade)
+
+  @@map("posts")
+}
+
+model Timeline {
+  id           Int      @id @default(autoincrement())
+  title        String
+  category     String
+  institution  Json
+  description  String?
+  duration     String?
+  marksheetUrl String?
+  order        Int      @default(0)
+  created_at   DateTime @default(now())
+
+  @@map("timeline")
+}

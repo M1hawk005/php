@@ -1,7 +1,7 @@
 import Header from '@/components/Header'
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { supabase } from '@/lib/supabaseClient';
+
 import "./globals.css";
 import NextTopLoader from 'nextjs-toploader';
 import ContactModal from '@/components/ContactModal';
@@ -34,17 +34,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const { data: resumeData, error: resumeError } = await supabase// fetch resume data
-    .from('site_content')
-    .select('value')
-    .eq('key', 'resume')
-    .single();//  cuz only one row
-
-  if (resumeError) {
-    console.error("Failed to fetch resume", resumeError.message);
-  }
-
-  const resumeUrl = resumeData?.value?.url;
+  const resumeUrl = "/resume.pdf";
 
   return (
     <html lang="en" className="dark">

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
 import { X, Loader2, CheckCircle2 } from 'lucide-react';
+import { sendMessage } from '@/actions/contact';
 
 export default function ContactModal() {
     const [isOpen, setIsOpen] = useState(false);
@@ -42,22 +42,11 @@ export default function ContactModal() {
         setSuccess(false);
 
         const formData = new FormData(e.currentTarget);
-        const name = formData.get('name') as string;
-        const email = formData.get('email') as string;
-        const message = formData.get('message') as string;
-
-        if (!name || !email || !message) {
-            setError('Please fill in all fields.');
-            setLoading(false);
-            return;
-        }
-
+        
         try {
-            const { error: insertError } = await supabase
-                .from('messages')
-                .insert([{ name, email, message }]);
+            const result = await sendMessage(formData);
 
-            if (insertError) throw insertError;
+            if (result.error) throw new Error(result.error);
 
             setSuccess(true);
             (e.target as HTMLFormElement).reset();

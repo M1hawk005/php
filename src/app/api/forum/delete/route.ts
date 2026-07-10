@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
@@ -8,21 +8,18 @@ export async function POST(request: Request) {
         if (!id || !type || !secretKey) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
-        const supabaseAdmin = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.SUPABASE_SERVICE_ROLE_KEY!
-        );
 
-        const table = type === 'threads' || type === 'thread' ? 'threads' : 'posts';
+        const isThread = type === 'threads' || type === 'thread';
 
         // Verify the secret key matches
-        const { data: record, error: fetchError } = await supabaseAdmin
-            .from(table)
-            .select('secret_key')
-            .eq('id', id)
-            .single();
+        let record;
+        if (isThread) {
+            record = await prisma.thread.findUnique({ where: { id }, select: { secret_key: true } });
+        } else {
+            record = await prisma.post.findUnique({ where: { id }, select: { secret_key: true } });
+        }
 
-        if (fetchError || !record) {
+        if (!record) {
             return NextResponse.json({ error: 'Record not found' }, { status: 404 });
         }
 
@@ -31,13 +28,10 @@ export async function POST(request: Request) {
         }
 
         // Delete the record
-        const { error: deleteError } = await supabaseAdmin
-            .from(table)
-            .delete()
-            .eq('id', id);
-
-        if (deleteError) {
-            throw deleteError;
+        if (isThread) {
+            await prisma.thread.delete({ where: { id } });
+        } else {
+            await prisma.post.delete({ where: { id } });
         }
 
         return NextResponse.json({ success: true });
