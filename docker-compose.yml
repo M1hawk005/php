@@ -17,7 +17,8 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/portfolio?schema=public
+      - POSTGRES_PRISMA_URL=postgresql://postgres:password@db:5432/portfolio?schema=public
+      - POSTGRES_URL_NON_POOLING=postgresql://postgres:password@db:5432/portfolio?schema=public
     networks:
       - web
     depends_on:

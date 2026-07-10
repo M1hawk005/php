@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Thread {
@@ -31,4 +32,14 @@ model Post {
   thread     Thread   @relation(fields: [thread_id], references: [id], onDelete: Cascade)
 
   @@map("posts")
+}
+
+model Message {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  email      String
+  message    String
+  created_at DateTime @default(now())
+
+  @@map("messages")
 }

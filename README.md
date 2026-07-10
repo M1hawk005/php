@@ -39,7 +39,8 @@ Create a `.env` file in the root directory based on `.env.example`:
 
 ```env
 # PostgreSQL database for the Forum
-DATABASE_URL="postgresql://postgres:password@localhost:5433/portfolio?schema=public"
+POSTGRES_PRISMA_URL="postgresql://postgres:password@localhost:5433/portfolio?schema=public"
+POSTGRES_URL_NON_POOLING="postgresql://postgres:password@localhost:5433/portfolio?schema=public"
 
 # Contact Form Delivery
 PERSONAL_EMAIL="your.email@gmail.com"
