@@ -9,10 +9,16 @@ export async function middleware(request: NextRequest) {
         },
     })
 
+    // Check if Supabase env variables exist to prevent crashing on Vercel
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        console.warn('Missing Supabase environment variables. Bypassing middleware.');
+        return response;
+    }
+
     //  Create Supabase Client
     const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
         {
             cookies: {
                 getAll() {
