@@ -39,20 +39,20 @@ export default function ReplyForm({ threadId, parentPostId }: Props) {
   }
 
   return (
-    <section className="mt-8 border border-border bg-card p-6 shadow-sm">
+    <section className="mt-8 border border-border bg-card p-4 shadow-sm sm:p-6">
       <h2 className="mb-1 text-lg font-bold">{parentPostId ? 'Reply to this comment' : 'Post a Comment'}</h2>
       {parentPostId && <p className="mb-4 text-xs text-muted-foreground">Replies stop at this level; they do not open additional discussion pages.</p>}
-      {error && <p className="mb-4 border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-400">{error}</p>}
+      {error && <p className="mb-4 border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-400" role="alert">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <textarea value={content} onChange={(event) => setContent(event.target.value)} maxLength={FORUM_LIMITS.content} required rows={4} placeholder="Comment. Lines beginning with > become greentext." className="w-full resize-y border border-border bg-background p-3 font-mono text-sm outline-none focus:border-primary" />
+        <textarea aria-label={parentPostId ? 'Reply content' : 'Comment content'} value={content} onChange={(event) => setContent(event.target.value)} maxLength={FORUM_LIMITS.content} required rows={4} placeholder="Comment. Lines beginning with > become greentext." className="w-full resize-y border border-border bg-background p-3 font-mono text-base outline-none focus:border-primary sm:text-sm" />
         {asciiImage ? (
           <div className="relative inline-block border border-border bg-[#09090b] p-2">
             <img src={asciiImage} alt="Attached ASCII art" className="max-h-40 object-contain" />
-            <button type="button" onClick={() => setAsciiImage(null)} className="absolute right-1 top-1 bg-black/70 p-1 text-white" aria-label="Remove attachment"><X size={12} /></button>
+            <button type="button" onClick={() => setAsciiImage(null)} className="absolute right-1 top-1 flex min-h-11 min-w-11 items-center justify-center bg-black/70 text-white" aria-label="Remove attachment"><X size={16} /></button>
           </div>
         ) : <AsciiArtGenerator onAsciiGenerated={setAsciiImage} />}
         <div className="flex justify-end border-t border-border pt-4">
-          <button disabled={isSubmitting} className="flex items-center gap-2 bg-primary px-8 py-2 font-bold text-primary-foreground disabled:opacity-50">
+          <button disabled={isSubmitting} className="flex min-h-12 w-full items-center justify-center gap-2 bg-primary px-8 py-2 font-bold text-primary-foreground disabled:opacity-50 sm:w-auto">
             {isSubmitting && <Loader2 size={16} className="animate-spin" />} {parentPostId ? 'Reply to Comment' : 'Post Comment'}
           </button>
         </div>

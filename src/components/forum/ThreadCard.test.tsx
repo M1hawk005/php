@@ -35,9 +35,9 @@ describe('ThreadCard', () => {
     expect(screen.getByText('third line')).toHaveClass('block');
   });
 
-  it('renders an image placeholder', () => {
+  it('uses a clean text-only layout when no image is attached', () => {
     render(<ThreadCard {...props} imageUrl={null} />);
-    expect(screen.getByText('No Image')).toBeInTheDocument();
+    expect(screen.queryByText('No Image')).not.toBeInTheDocument();
   });
 
   it('identifies administrator-authored threads', () => {

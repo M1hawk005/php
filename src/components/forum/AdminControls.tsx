@@ -28,18 +28,18 @@ export default function AdminControls({ targetType, targetId, pinned = false, ar
 
   if (busy) return <Loader2 size={15} className="animate-spin text-primary" />;
   return (
-    <div className="flex items-center gap-1 text-primary" aria-label="Administrator controls">
+    <div className="flex flex-wrap items-center text-primary" aria-label="Administrator controls">
       {targetType === 'thread' && (
         <>
-          <button onClick={() => run(pinned ? 'unpin' : 'pin')} className="p-1 hover:bg-primary/10" title={pinned ? 'Unpin thread' : 'Pin thread'}>
+          <button onClick={() => run(pinned ? 'unpin' : 'pin')} className="flex min-h-11 min-w-11 items-center justify-center hover:bg-primary/10" title={pinned ? 'Unpin thread' : 'Pin thread'} aria-label={pinned ? 'Unpin thread' : 'Pin thread'}>
             {pinned ? <PinOff size={15} /> : <Pin size={15} />}
           </button>
-          <button onClick={() => run(archived ? 'restore' : 'archive')} className="p-1 hover:bg-primary/10" title={archived ? 'Restore thread' : 'Archive thread'}>
+          <button onClick={() => run(archived ? 'restore' : 'archive')} className="flex min-h-11 min-w-11 items-center justify-center hover:bg-primary/10" title={archived ? 'Restore thread' : 'Archive thread'} aria-label={archived ? 'Restore thread' : 'Archive thread'}>
             {archived ? <ArchiveRestore size={15} /> : <Archive size={15} />}
           </button>
         </>
       )}
-      <button onClick={() => run('delete')} className="p-1 text-red-400 hover:bg-red-500/10" title={`Delete ${targetType}`}>
+      <button onClick={() => run('delete')} className="flex min-h-11 min-w-11 items-center justify-center text-red-400 hover:bg-red-500/10" title={`Delete ${targetType}`} aria-label={`Delete ${targetType}`}>
         <Trash2 size={15} />
       </button>
     </div>

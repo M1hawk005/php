@@ -15,7 +15,7 @@ type HeaderProps = {
     resumeUrl: string | null;
 }
 
-import { ChevronDown, ChevronUp, Home, Mail } from "lucide-react";
+import { ChevronDown, ChevronUp, FileText, Home, Mail, Menu, X } from "lucide-react";
 
 import { usePathname } from "next/navigation";
 
@@ -23,6 +23,7 @@ import { usePathname } from "next/navigation";
 export default function Header({ resumeUrl }: HeaderProps) {
     const [isVisible, setIsVisible] = useState(true); //Header visibility
     const [hasScrolled, setHasScrolled] = useState(false); //Track first scroll
+    const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
 
     useEffect(() => {
@@ -51,10 +52,33 @@ export default function Header({ resumeUrl }: HeaderProps) {
 
     return (
         <>
+            <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/95 backdrop-blur-lg md:hidden">
+                <div className="flex h-16 items-center justify-between px-4">
+                    <Link href="/" className="flex min-h-11 items-center gap-2 rounded-md px-2 font-mono font-bold" aria-label="Home">
+                        <Home size={20} className={pathname === "/" ? "fill-primary/30 text-primary" : ""} />
+                        <span>Aditya Malik</span>
+                    </Link>
+                    <button type="button" onClick={() => setMobileOpen((open) => !open)} className="flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary" aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileOpen} aria-controls="mobile-navigation">
+                        {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+                    </button>
+                </div>
+                {mobileOpen && (
+                    <nav id="mobile-navigation" className="border-t border-border bg-background px-4 py-3 shadow-xl" aria-label="Mobile navigation">
+                        <div className="grid gap-1">
+                            <Link href="/blog" onClick={() => setMobileOpen(false)} className={cn("flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground", pathname.startsWith("/blog") && "bg-[var(--nav-cyan)] text-primary-foreground")}>Blog</Link>
+                            <Link href="/projects" onClick={() => setMobileOpen(false)} className={cn("flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground", pathname.startsWith("/projects") && "bg-[var(--nav-green)] text-primary-foreground")}>Projects</Link>
+                            <Link href="/forum" onClick={() => setMobileOpen(false)} className={cn("flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground", pathname.startsWith("/forum") && "bg-[var(--nav-purple)] text-primary-foreground")}>Forum</Link>
+                            <a href="mailto:aditya.malik32x@gmail.com" onClick={() => setMobileOpen(false)} className="flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary"><Mail size={18} className="mr-3" /> Email</a>
+                            {resumeUrl && <a href={resumeUrl} target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)} className="flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary"><FileText size={18} className="mr-3" /> Resume</a>}
+                        </div>
+                    </nav>
+                )}
+            </header>
+
             {/* Toggle Button */}
             <button
                 onClick={toggleHeader}
-                className="fixed top-6 left-6 z-50 p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300"
+                className="fixed top-6 left-6 z-50 hidden p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 md:block"
                 aria-label={isVisible ? "Collapse Header" : "Expand Header"}
             >
                 {isVisible ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -62,7 +86,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
 
             <header
                 className={cn(
-                    "fixed top-0 left-0 right-0 z-40 h-20 flex items-center px-4 bg-background/80 backdrop-blur-lg border-b transition-all duration-300 ease-in-out",
+                    "fixed top-0 left-0 right-0 z-40 hidden h-20 items-center px-4 bg-background/80 backdrop-blur-lg border-b transition-all duration-300 ease-in-out md:flex",
                     getBorderColor(),
                     isVisible ? "translate-y-0" : "-translate-y-full" //slide up and down
                 )}
@@ -124,7 +148,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                         className={cn(
                                             navigationMenuTriggerStyle(),
                                             "w-24 justify-center transition-colors hover:!bg-[var(--nav-purple)] hover:!text-primary-foreground focus:!bg-[var(--nav-purple)] focus:!text-primary-foreground",
-                                            pathname === "/forum" ? "!bg-[var(--nav-purple)] !text-primary-foreground" : "bg-transparent"
+                                            pathname.startsWith("/forum") ? "!bg-[var(--nav-purple)] !text-primary-foreground" : "bg-transparent"
                                         )}
                                     >
                                         Forum

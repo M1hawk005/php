@@ -34,7 +34,7 @@ export default function OwnerDeleteButton({ targetType, targetId, redirectTo }: 
   }
 
   return (
-    <button onClick={remove} disabled={busy} className="rounded p-1 text-red-400 transition-colors hover:bg-red-500/10 disabled:opacity-50" title={`Delete your ${targetType}`} aria-label={`Delete your ${targetType}`}>
+    <button onClick={remove} disabled={busy} className="flex min-h-11 min-w-11 items-center justify-center rounded text-red-400 transition-colors hover:bg-red-500/10 disabled:opacity-50" title={`Delete your ${targetType}`} aria-label={`Delete your ${targetType}`}>
       {busy ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} />}
     </button>
   );

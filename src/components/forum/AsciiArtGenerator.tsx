@@ -89,7 +89,7 @@ export default function AsciiArtGenerator({ onAsciiGenerated }: { onAsciiGenerat
           if (file) convert(file);
         }}
       />
-      <label htmlFor={inputId} className="flex w-fit cursor-pointer items-center gap-2 border border-border bg-background px-4 py-2 text-sm transition-colors hover:border-primary hover:text-primary">
+      <label htmlFor={inputId} className="flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 border border-border bg-background px-4 py-2 text-center text-sm transition-colors hover:border-primary hover:text-primary sm:w-fit">
         {busy ? <Loader2 size={16} className="animate-spin" /> : <ImageIcon size={16} />}
         {busy ? 'Converting and attaching…' : 'Convert and attach image as ASCII'}
       </label>

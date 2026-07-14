@@ -45,15 +45,15 @@ export default function VoteControls({ targetType, targetId, upvotes, downvotes 
   }
 
   return (
-    <div className="flex items-center gap-1" aria-label="Votes">
+    <div className="flex items-center" aria-label="Votes">
       <button
         onClick={() => vote(1)}
         disabled={busy}
-        className={`rounded p-1 transition-colors hover:text-green-400 disabled:opacity-50 ${selected === 1 ? 'bg-green-500/15 text-green-400' : ''}`}
+        className={`flex min-h-11 min-w-11 items-center justify-center rounded transition-colors hover:text-green-400 disabled:opacity-50 ${selected === 1 ? 'bg-green-500/15 text-green-400' : ''}`}
         aria-label="Upvote"
         aria-pressed={selected === 1}
       >
-        <ArrowBigUp size={17} className={selected === 1 ? 'fill-current' : ''} />
+        <ArrowBigUp size={20} className={selected === 1 ? 'fill-current' : ''} />
       </button>
       <span className="min-w-6 text-center font-mono text-xs text-foreground" title={`${counts.upvotes} up, ${counts.downvotes} down`}>
         {counts.upvotes - counts.downvotes}
@@ -61,11 +61,11 @@ export default function VoteControls({ targetType, targetId, upvotes, downvotes 
       <button
         onClick={() => vote(-1)}
         disabled={busy}
-        className={`rounded p-1 transition-colors hover:text-red-400 disabled:opacity-50 ${selected === -1 ? 'bg-red-500/15 text-red-400' : ''}`}
+        className={`flex min-h-11 min-w-11 items-center justify-center rounded transition-colors hover:text-red-400 disabled:opacity-50 ${selected === -1 ? 'bg-red-500/15 text-red-400' : ''}`}
         aria-label="Downvote"
         aria-pressed={selected === -1}
       >
-        {busy ? <Loader2 size={15} className="animate-spin" /> : <ArrowBigDown size={17} className={selected === -1 ? 'fill-current' : ''} />}
+        {busy ? <Loader2 size={18} className="animate-spin" /> : <ArrowBigDown size={20} className={selected === -1 ? 'fill-current' : ''} />}
       </button>
     </div>
   );

@@ -37,27 +37,27 @@ export default function CreateThreadForm() {
   }
 
   if (!isOpen) {
-    return <button onClick={() => setIsOpen(true)} className="w-full border border-dashed border-border p-4 text-center text-muted-foreground transition-colors hover:border-primary hover:text-primary">+ Start a New Thread</button>;
+    return <button onClick={() => setIsOpen(true)} className="min-h-12 w-full border border-dashed border-border p-3 text-center text-muted-foreground transition-colors hover:border-primary hover:text-primary sm:p-4">+ Start a New Thread</button>;
   }
 
   return (
-    <section className="border border-border bg-card p-6 shadow-sm">
+    <section className="border border-border bg-card p-4 shadow-sm sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-bold">New Thread</h2>
-        <button onClick={() => setIsOpen(false)} aria-label="Close thread form"><X size={20} /></button>
+        <button type="button" onClick={() => setIsOpen(false)} className="flex min-h-11 min-w-11 items-center justify-center" aria-label="Close thread form"><X size={20} /></button>
       </div>
-      {error && <p className="mb-4 border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-400">{error}</p>}
+      {error && <p className="mb-4 border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-400" role="alert">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={FORUM_LIMITS.title} placeholder="Subject (optional)" className="w-full border border-border bg-background p-3 outline-none focus:border-primary" />
-        <textarea value={content} onChange={(event) => setContent(event.target.value)} maxLength={FORUM_LIMITS.content} required rows={6} placeholder="Comment. Lines beginning with > become greentext." className="w-full resize-y border border-border bg-background p-3 font-mono text-sm outline-none focus:border-primary" />
+        <input aria-label="Thread subject" value={title} onChange={(event) => setTitle(event.target.value)} maxLength={FORUM_LIMITS.title} placeholder="Subject (optional)" className="min-h-12 w-full border border-border bg-background p-3 outline-none focus:border-primary" />
+        <textarea aria-label="Thread content" value={content} onChange={(event) => setContent(event.target.value)} maxLength={FORUM_LIMITS.content} required rows={6} placeholder="Comment. Lines beginning with > become greentext." className="w-full resize-y border border-border bg-background p-3 font-mono text-base outline-none focus:border-primary sm:text-sm" />
         {asciiImage ? (
           <div className="relative inline-block border border-border bg-[#09090b] p-2">
             <img src={asciiImage} alt="Attached ASCII art" className="max-h-40 object-contain" />
-            <button type="button" onClick={() => setAsciiImage(null)} className="absolute right-1 top-1 bg-black/70 p-1 text-white" aria-label="Remove attachment"><X size={12} /></button>
+            <button type="button" onClick={() => setAsciiImage(null)} className="absolute right-1 top-1 flex min-h-11 min-w-11 items-center justify-center bg-black/70 text-white" aria-label="Remove attachment"><X size={16} /></button>
           </div>
         ) : <AsciiArtGenerator onAsciiGenerated={setAsciiImage} />}
         <div className="flex justify-end border-t border-border pt-4">
-          <button disabled={isSubmitting} className="flex items-center gap-2 bg-primary px-8 py-2 font-bold text-primary-foreground disabled:opacity-50">
+          <button disabled={isSubmitting} className="flex min-h-12 w-full items-center justify-center gap-2 bg-primary px-8 py-2 font-bold text-primary-foreground disabled:opacity-50 sm:w-auto">
             {isSubmitting && <Loader2 size={16} className="animate-spin" />} Post Thread
           </button>
         </div>
