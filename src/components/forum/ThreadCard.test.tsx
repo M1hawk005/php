@@ -1,36 +1,47 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import ThreadCard from './ThreadCard';
 
-// Mock next/navigation
-vi.mock('next/navigation', () => ({
-    useRouter: () => ({
-        push: vi.fn(),
-        refresh: vi.fn(),
-    }),
+vi.mock('@/actions/forum', () => ({
+  getForumVote: vi.fn().mockResolvedValue({ direction: 0 }),
+  moderateForumItem: vi.fn(),
+  voteForumItem: vi.fn(),
 }));
 
 describe('ThreadCard', () => {
-    const mockProps = {
-        id: 'thread-123',
-        title: 'Test Thread',
-        content: 'This is a test thread content.',
-        imageUrl: 'https://example.com/image.jpg',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(), // 1 hour ago
-        replyCount: 5,
-    };
+  const props = {
+    id: '00000000-0000-4000-8000-000000000001',
+    title: 'Test Thread',
+    content: 'This is a test thread content.',
+    imageUrl: 'data:image/webp;base64,AAAA',
+    createdAt: new Date(Date.now() - 3_600_000).toISOString(),
+    replyCount: 5,
+    upvotes: 8,
+    downvotes: 2,
+  };
 
-    it('renders the thread card with title and content', () => {
-        render(<ThreadCard {...mockProps} />);
-        
-        expect(screen.getByText('Test Thread')).toBeInTheDocument();
-        expect(screen.getByText('This is a test thread content.')).toBeInTheDocument();
-        expect(screen.getByText(/5 Replies/i)).toBeInTheDocument();
-    });
+  it('renders the thread summary and score', () => {
+    render(<ThreadCard {...props} />);
+    expect(screen.getByText('Test Thread')).toBeInTheDocument();
+    expect(screen.getByText('This is a test thread content.')).toBeInTheDocument();
+    expect(screen.getByText(/5 Comments/i)).toBeInTheDocument();
+    expect(screen.getByTitle('8 up, 2 down')).toHaveTextContent('6');
+  });
 
-    it('renders placeholder if no image is provided', () => {
-        render(<ThreadCard {...mockProps} imageUrl={null} />);
-        
-        expect(screen.getByText('No Image')).toBeInTheDocument();
-    });
+  it('preserves lines and applies greentext styling', () => {
+    render(<ThreadCard {...props} content={'first line\n>green line\nthird line'} />);
+    expect(screen.getByText('first line')).toHaveClass('block');
+    expect(screen.getByText('>green line')).toHaveClass('text-green-500');
+    expect(screen.getByText('third line')).toHaveClass('block');
+  });
+
+  it('renders an image placeholder', () => {
+    render(<ThreadCard {...props} imageUrl={null} />);
+    expect(screen.getByText('No Image')).toBeInTheDocument();
+  });
+
+  it('identifies administrator-authored threads', () => {
+    render(<ThreadCard {...props} authorIsAdmin />);
+    expect(screen.getByText('Admin ◆')).toBeInTheDocument();
+  });
 });

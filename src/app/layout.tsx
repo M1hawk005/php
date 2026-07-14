@@ -4,7 +4,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
 import NextTopLoader from 'nextjs-toploader';
-import ContactModal from '@/components/ContactModal';
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -44,7 +43,6 @@ export default async function RootLayout({
         <NextTopLoader color="#73daca" showSpinner={false} />
         <Header resumeUrl={resumeUrl} />
         {children}
-        <ContactModal />
       </body>
     </html>
   );

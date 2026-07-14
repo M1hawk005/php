@@ -13,25 +13,64 @@ model Thread {
   title       String
   content     String
   image_url   String?
+  owner_hash  String?
   reply_count Int      @default(0)
-  secret_key  String?
+  is_admin    Boolean  @default(false)
+  is_pinned   Boolean  @default(false)
+  is_archived Boolean  @default(false)
+  upvotes     Int      @default(0)
+  downvotes   Int      @default(0)
   created_at  DateTime @default(now())
   bumped_at   DateTime @default(now())
   posts       Post[]
 
+  @@index([is_archived, is_pinned, bumped_at])
   @@map("threads")
 }
 
 model Post {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  thread_id  String   @db.Uuid
-  content    String
-  image_url  String?
-  secret_key String?
-  created_at DateTime @default(now())
-  thread     Thread   @relation(fields: [thread_id], references: [id], onDelete: Cascade)
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  thread_id      String   @db.Uuid
+  parent_post_id String?  @db.Uuid
+  content        String
+  image_url      String?
+  owner_hash     String?
+  reply_count    Int      @default(0)
+  is_admin       Boolean  @default(false)
+  upvotes        Int      @default(0)
+  downvotes      Int      @default(0)
+  created_at     DateTime @default(now())
+  thread         Thread   @relation(fields: [thread_id], references: [id], onDelete: Cascade)
+  parent         Post?    @relation("PostReplies", fields: [parent_post_id], references: [id], onDelete: Cascade)
+  replies        Post[]   @relation("PostReplies")
 
+  @@index([thread_id, created_at])
+  @@index([parent_post_id, created_at])
   @@map("posts")
+}
+
+model ForumVote {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  target_id   String   @db.Uuid
+  target_type String
+  voter_hash  String
+  direction   Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@unique([target_type, target_id, voter_hash])
+  @@index([target_type, target_id])
+  @@map("forum_votes")
+}
+
+model RateLimitEvent {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fingerprint String
+  action      String
+  created_at  DateTime @default(now())
+
+  @@index([fingerprint, action, created_at])
+  @@map("rate_limit_events")
 }
 
 model Message {

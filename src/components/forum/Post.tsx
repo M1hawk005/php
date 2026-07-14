@@ -1,122 +1,72 @@
 'use client';
 
-import Image from "next/image";
-import { formatDistanceToNow } from "date-fns";
-import { useEffect, useState } from "react";
-import { Trash2, Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Image from 'next/image';
+import Link from 'next/link';
+import { formatDistanceToNow } from 'date-fns';
+import { MessageSquare } from 'lucide-react';
+import AdminControls from './AdminControls';
+import OwnerDeleteButton from './OwnerDeleteButton';
+import VoteControls from './VoteControls';
 
 interface PostProps {
-    id: string;
-    content: string;
-    imageUrl?: string | null;
-    createdAt: string;
-    isOp?: boolean;
-    index?: number;
+  id: string;
+  threadId: string;
+  content: string;
+  imageUrl?: string | null;
+  createdAt: string;
+  isOp?: boolean;
+  index?: number;
+  authorIsAdmin?: boolean;
+  viewerIsAdmin?: boolean;
+  upvotes?: number;
+  downvotes?: number;
+  replyCount?: number;
+  allowDiscussion?: boolean;
+  deleteRedirectTo?: string;
 }
 
-export default function Post({ id, content, imageUrl, createdAt, isOp = false, index }: PostProps) {
-    const [canDelete, setCanDelete] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
-    const router = useRouter();
+export default function Post({
+  id, threadId, content, imageUrl, createdAt, isOp = false, index,
+  authorIsAdmin = false, viewerIsAdmin = false, upvotes = 0, downvotes = 0,
+  replyCount = 0, allowDiscussion = true, deleteRedirectTo,
+}: PostProps) {
+  const discussionHref = !isOp && allowDiscussion ? `/forum/${threadId}/comments/${id}` : null;
+  const formatted = content.split('\n').map((line, lineIndex) => (
+    <span key={lineIndex} className={`block ${line.trim().startsWith('>') ? 'text-green-500' : ''}`}>{line || '\u00a0'}</span>
+  ));
 
-    useEffect(() => {
-        const storedKeys = JSON.parse(localStorage.getItem('php_forum_keys') || '{}');
-        if (storedKeys[id]) {
-            setCanDelete(true);
-        }
-    }, [id]);
-
-    const handleDelete = async () => {
-        if (!confirm('Are you sure you want to delete this post?')) return;
-
-        setIsDeleting(true);
-        const storedKeys = JSON.parse(localStorage.getItem('php_forum_keys') || '{}');
-        const secretKey = storedKeys[id];
-
-        try {
-            const response = await fetch('/api/forum/delete', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id,
-                    type: isOp ? 'thread' : 'post',
-                    secretKey,
-                }),
-            });
-
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.error || 'Failed to delete');
-            }
-
-            // Remove key from local storage
-            delete storedKeys[id];
-            localStorage.setItem('php_forum_keys', JSON.stringify(storedKeys));
-
-            if (isOp) {
-                router.push('/forum');
-            } else {
-                router.refresh();
-            }
-        } catch (error) {
-            console.error('Delete error:', error);
-            alert('Failed to delete post');
-        } finally {
-            setIsDeleting(false);
-        }
-    };
-
-    // Function to handle greentext
-    const formatContent = (text: string) => {
-        return text.split('\n').map((line, i) => {
-            if (line.trim().startsWith('>')) {
-                return <span key={i} className="text-green-500 block">{line}</span>;
-            }
-            return <span key={i} className="block">{line}</span>;
-        });
-    };
-
-    return (
-        <div className={`p-4 mb-4 rounded-md border ${isOp ? 'border-primary/50 bg-primary/5' : 'border-border bg-card'} overflow-hidden group`}>
-            <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
-                <span className="font-bold text-foreground">Anonymous</span>
-                <span>{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</span>
-                <span className="text-xs opacity-50">No. {id.slice(0, 8)}</span>
-                {index !== undefined && <span className="ml-auto">#{index + 1}</span>}
-
-                {canDelete && (
-                    <button
-                        onClick={handleDelete}
-                        disabled={isDeleting}
-                        className="ml-2 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                        title="Delete Post"
-                    >
-                        {isDeleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
-                    </button>
-                )}
+  return (
+    <article className={`relative mb-4 overflow-hidden border p-4 transition-colors ${isOp ? 'border-primary/50 bg-primary/5' : 'border-border bg-card'} ${discussionHref ? 'hover:border-primary/50' : ''}`}>
+      {discussionHref && <Link href={discussionHref} className="absolute inset-0 z-0" aria-label={`Open discussion for comment ${id.slice(0, 8)}`} />}
+      <div className={discussionHref ? 'pointer-events-none relative z-[1]' : ''}>
+        <header className="mb-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <span className={`font-bold ${authorIsAdmin ? 'text-primary' : 'text-foreground'}`}>{authorIsAdmin ? 'Admin ◆' : 'Anonymous'}</span>
+          <span>{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</span>
+          <span className="text-xs opacity-50">No. {id.slice(0, 8)}</span>
+          {index !== undefined && <span className="ml-auto">#{index + 1}</span>}
+        </header>
+        <div className="flex flex-col gap-4 md:flex-row">
+          {imageUrl && (
+            <div className="relative h-48 w-full flex-none overflow-hidden border border-border bg-[#09090b] md:w-64">
+              <Image src={imageUrl} alt="Generated ASCII attachment" fill unoptimized className="object-contain" />
             </div>
-
-            <div className="flex flex-col md:flex-row gap-4">
-                {imageUrl && (
-                    <div className="flex-none">
-                        <a href={imageUrl} target="_blank" rel="noopener noreferrer" className="block relative w-48 h-48 bg-muted rounded overflow-hidden hover:opacity-90 transition-opacity">
-                            <Image
-                                src={imageUrl}
-                                alt="Post attachment"
-                                fill
-                                className="object-cover"
-                            />
-                        </a>
-                    </div>
-                )}
-
-                <div className="flex-1 font-mono text-sm md:text-base break-words">
-                    {formatContent(content)}
-                </div>
-            </div>
+          )}
+          <div className="min-w-0 flex-1 break-words font-mono text-sm md:text-base">{formatted}</div>
         </div>
-    );
+      </div>
+      <footer className="relative z-10 mt-3 flex items-center justify-end gap-3 border-t border-border/40 pt-2 text-muted-foreground">
+        {discussionHref && (
+          <Link href={discussionHref} className="mr-auto flex items-center gap-1 text-xs hover:text-primary">
+            <MessageSquare size={14} /> {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
+          </Link>
+        )}
+        <VoteControls targetType={isOp ? 'thread' : 'post'} targetId={id} upvotes={upvotes} downvotes={downvotes} />
+        {viewerIsAdmin ? (
+          <AdminControls targetType={isOp ? 'thread' : 'post'} targetId={id} redirectTo={deleteRedirectTo} />
+        ) : (
+          <OwnerDeleteButton targetType={isOp ? 'thread' : 'post'} targetId={id} redirectTo={deleteRedirectTo} />
+        )}
+      </footer>
+    </article>
+  );
 }

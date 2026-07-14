@@ -1,144 +1,67 @@
+/* eslint-disable @next/next/no-img-element -- previews are local generated data URLs */
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Loader2, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { createThread } from '@/actions/forum';
+import { FORUM_LIMITS } from '@/lib/forum-limits';
+import { getForumVisitorId, rememberForumItem } from '@/lib/forum-visitor';
 import AsciiArtGenerator from './AsciiArtGenerator';
 
 export default function CreateThreadForm() {
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [asciiImage, setAsciiImage] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [isOpen, setIsOpen] = useState(false);
-    const router = useRouter();
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [asciiImage, setAsciiImage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-    const handleAsciiGenerated = (asciiImageUrl: string) => {
-        setAsciiImage(asciiImageUrl);
-    };
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!content.trim()) return;
+    setIsSubmitting(true);
+    setError(null);
+    const data = new FormData();
+    data.set('title', title);
+    data.set('content', content);
+    data.set('ownerId', getForumVisitorId());
+    if (asciiImage) data.set('imageUrl', asciiImage);
+    const result = await createThread(data);
+    setIsSubmitting(false);
+    if (result.error) return setError(result.error);
+    if ('thread' in result && result.thread) rememberForumItem(result.thread.id);
+    setTitle('');
+    setContent('');
+    setAsciiImage(null);
+    setIsOpen(false);
+  }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!content.trim()) return;
+  if (!isOpen) {
+    return <button onClick={() => setIsOpen(true)} className="w-full border border-dashed border-border p-4 text-center text-muted-foreground transition-colors hover:border-primary hover:text-primary">+ Start a New Thread</button>;
+  }
 
-        setIsSubmitting(true);
-        setError(null);
-
-        try {
-            const secretKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-            
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('content', content);
-            formData.append('secretKey', secretKey);
-            
-            if (asciiImage) {
-                formData.append('imageUrl', asciiImage);
-            }
-
-            const result = await createThread(formData);
-
-            if (result.error) throw new Error(result.error);
-            const threadData = result.thread;
-
-            // Save secret key to localStorage for deletion capabilities
-            if (threadData) {
-                const storedKeys = JSON.parse(localStorage.getItem('php_forum_keys') || '{}');
-                storedKeys[threadData.id] = secretKey;
-                localStorage.setItem('php_forum_keys', JSON.stringify(storedKeys));
-            }
-
-            setTitle('');
-            setContent('');
-            setAsciiImage(null);
-            setIsOpen(false);
-        } catch (err: unknown) {
-            console.error('Error creating thread:', err);
-            setError(err instanceof Error ? err.message : 'Failed to create thread');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    if (!isOpen) {
-        return (
-            <button
-                onClick={() => setIsOpen(true)}
-                className="w-full p-4 border border-dashed border-border rounded-md text-muted-foreground hover:text-primary hover:border-primary transition-colors text-center"
-            >
-                + Start a New Thread
-            </button>
-        );
-    }
-
-    return (
-        <div className="bg-card border border-border rounded-md p-6 mb-8 shadow-sm">
-            <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-bold text-foreground">New Thread</h3>
-                <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
-                    <X size={20} />
-                </button>
-            </div>
-
-            {error && (
-                <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-3 rounded mb-4 text-sm">
-                    {error}
-                </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <input
-                        type="text"
-                        placeholder="Subject (Optional)"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="w-full bg-background border border-border rounded p-3 focus:border-primary focus:outline-none transition-colors"
-                    />
-                </div>
-
-                <div>
-                    <textarea
-                        placeholder="Content (Markdown allowed). Embedded image links will be rendered."
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        required
-                        rows={6}
-                        className="w-full bg-background border border-border rounded p-3 focus:border-primary focus:outline-none font-mono text-sm transition-colors resize-y"
-                    />
-                </div>
-
-                <div className="pt-2">
-                    {asciiImage ? (
-                        <div className="relative inline-block border border-border rounded overflow-hidden">
-                            <img src={asciiImage} alt="Attached ASCII Art" className="max-h-32 object-contain" />
-                            <button 
-                                type="button" 
-                                onClick={() => setAsciiImage(null)}
-                                className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition-colors"
-                            >
-                                <X size={12} />
-                            </button>
-                        </div>
-                    ) : (
-                        <AsciiArtGenerator onAsciiGenerated={handleAsciiGenerated} />
-                    )}
-                </div>
-
-                <div className="flex justify-end pt-4 border-t border-border">
-                    <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="bg-primary text-primary-foreground px-8 py-2 rounded font-bold hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
-                    >
-                        {isSubmitting && <Loader2 size={16} className="animate-spin" />}
-                        Post Thread
-                    </button>
-                </div>
-            </form>
+  return (
+    <section className="border border-border bg-card p-6 shadow-sm">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-bold">New Thread</h2>
+        <button onClick={() => setIsOpen(false)} aria-label="Close thread form"><X size={20} /></button>
+      </div>
+      {error && <p className="mb-4 border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-400">{error}</p>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={FORUM_LIMITS.title} placeholder="Subject (optional)" className="w-full border border-border bg-background p-3 outline-none focus:border-primary" />
+        <textarea value={content} onChange={(event) => setContent(event.target.value)} maxLength={FORUM_LIMITS.content} required rows={6} placeholder="Comment. Lines beginning with > become greentext." className="w-full resize-y border border-border bg-background p-3 font-mono text-sm outline-none focus:border-primary" />
+        {asciiImage ? (
+          <div className="relative inline-block border border-border bg-[#09090b] p-2">
+            <img src={asciiImage} alt="Attached ASCII art" className="max-h-40 object-contain" />
+            <button type="button" onClick={() => setAsciiImage(null)} className="absolute right-1 top-1 bg-black/70 p-1 text-white" aria-label="Remove attachment"><X size={12} /></button>
+          </div>
+        ) : <AsciiArtGenerator onAsciiGenerated={setAsciiImage} />}
+        <div className="flex justify-end border-t border-border pt-4">
+          <button disabled={isSubmitting} className="flex items-center gap-2 bg-primary px-8 py-2 font-bold text-primary-foreground disabled:opacity-50">
+            {isSubmitting && <Loader2 size={16} className="animate-spin" />} Post Thread
+          </button>
         </div>
-    );
+      </form>
+    </section>
+  );
 }

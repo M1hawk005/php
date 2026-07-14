@@ -1,6 +1,6 @@
 import { getHomeContent, getProjects } from "@/lib/markdown";
-import TimelineCard from "@/components/TimelineCard";
-import ProjectCard from "@/components/ProjectCard";
+
+
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import SocialSidebar from "@/components/SocialSidebar";
@@ -8,9 +8,10 @@ import EmailSidebar from "@/components/EmailSidebar";
 import WorkSection from "@/components/WorkSection";
 import EndSection from "@/components/EndSection";
 import ReactMarkdown from 'react-markdown';
+import type { Timeline } from '@/data/timeline';
 
 export default async function HomePage() {
-  const content = getHomeContent() as any;
+  const content = getHomeContent() as { intro?: string; bio?: string; experience?: Timeline[]; education?: Timeline[] };
   const projects = getProjects();
 
   // Highlighted projects
@@ -29,7 +30,7 @@ export default async function HomePage() {
 
   const profileImageUrl = "/avatar.png"; // Statically served
 
-  let intro = {
+  const intro = {
     name: "Aditya Malik",
     bio: "Software Engineer",
     html_text: content.intro || "Welcome to my portfolio."
@@ -58,7 +59,7 @@ export default async function HomePage() {
             <ReactMarkdown>{intro.html_text}</ReactMarkdown>
           </div>
           <a
-            href="#contact"
+            href="mailto:aditya.malik32x@gmail.com"
             className="px-7 py-3 border border-border text-foreground rounded hover:border-accent hover:text-accent hover:bg-accent/10 transition-colors font-mono"
           >
             Get In Touch

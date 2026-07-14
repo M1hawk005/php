@@ -134,7 +134,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
                             <NavigationMenuItem>
                                 <NavigationMenuLink asChild>
                                     <a
-                                        href="#contact"
+                                        href="mailto:aditya.malik32x@gmail.com"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
                                             "transition-colors hover:!bg-[var(--nav-cyan)] hover:!text-primary-foreground focus:!bg-[var(--nav-cyan)] focus:!text-primary-foreground group px-3"

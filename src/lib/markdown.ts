@@ -11,7 +11,7 @@ export function getHomeContent() {
         // Simple parser to extract sections separated by `# SectionName`
         const sections: Record<string, string> = {};
         let currentSection = 'default';
-        
+
         const lines = fileContents.split('\n');
         for (const line of lines) {
             if (line.startsWith('# ')) {
@@ -21,7 +21,7 @@ export function getHomeContent() {
                 sections[currentSection] = (sections[currentSection] || '') + line + '\n';
             }
         }
-        
+
         // Parse timeline sections
         const parseTimeline = (markdown: string, category: string) => {
             if (!markdown) return [];
@@ -32,7 +32,7 @@ export function getHomeContent() {
                 let institution = '';
                 let duration = '';
                 let description = '';
-                
+
                 if (lines[1] && lines[1].includes('|')) {
                     const parts = lines[1].split('|');
                     institution = parts[0].replace(/\*\*/g, '').trim();
@@ -61,8 +61,8 @@ export function getHomeContent() {
             experience: parseTimeline(sections['experience'], 'experience'),
             education: parseTimeline(sections['education'], 'education')
         };
-    } catch (e) {
-        console.error("Failed to read home.md", e);
+    } catch (error) {
+        console.error("Failed to read home.md", error);
         return {};
     }
 }
@@ -76,17 +76,17 @@ export function getProjects() {
             const filePath = path.join(projectsDir, fileName);
             const fileContents = fs.readFileSync(filePath, 'utf8');
             const { data, content } = matter(fileContents);
-            
+
             return {
                 slug,
                 frontmatter: data,
                 content
             };
         });
-        
+
         return projects;
-    } catch (e) {
-        console.error("Failed to read projects", e);
+    } catch (error) {
+        console.error("Failed to read projects", error);
         return [];
     }
 }
@@ -97,7 +97,7 @@ export function getProjectBySlug(slug: string) {
         const fileContents = fs.readFileSync(filePath, 'utf8');
         const { data, content } = matter(fileContents);
         return { slug, frontmatter: data, content };
-    } catch (e) {
+    } catch {
         return null;
     }
 }
@@ -111,20 +111,20 @@ export function getBlogs() {
             const filePath = path.join(blogsDir, fileName);
             const fileContents = fs.readFileSync(filePath, 'utf8');
             const { data, content } = matter(fileContents);
-            
+
             return {
                 slug,
                 frontmatter: data,
                 content
             };
         });
-        
+
         // Sort by date descending
         return blogs.sort((a, b) => {
             return new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime();
         });
-    } catch (e) {
-        console.error("Failed to read blogs", e);
+    } catch (error) {
+        console.error("Failed to read blogs", error);
         return [];
     }
 }
@@ -135,7 +135,7 @@ export function getBlogBySlug(slug: string) {
         const fileContents = fs.readFileSync(filePath, 'utf8');
         const { data, content } = matter(fileContents);
         return { slug, frontmatter: data, content };
-    } catch (e) {
+    } catch {
         return null;
     }
 }

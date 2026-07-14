@@ -15,8 +15,8 @@ type TimelineCardProps = {
     position?: "left" | "right";
 }
 
-export default function TimelineCard({ timeline, position = "left" }: TimelineCardProps) {
-    const isLeft = position === "left";
+export default function TimelineCard({ timeline }: TimelineCardProps) {
+
 
     return (
         <div className="relative group h-full">

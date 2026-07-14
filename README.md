@@ -8,12 +8,12 @@ Welcome to the source code of my personal portfolio and web platform. This proje
 - **Dynamic Projects & Blogs**: Fully responsive project detail and blog pages with rich markdown rendering.
 - **Anonymous Forum**: A fully functional, unauthenticated imageboard-style forum with threads and replies.
 - **In-Browser ASCII Art Generator**: Upload images to the forum to have them processed client-side into beautiful, colored ASCII art that scales dynamically.
-- **Direct Email Contact**: A server-action powered contact form that delivers messages instantly to a personal inbox.
+- **Direct Email Contact**: Contact links open the visitor's configured email client.
 - **Dark Mode First**: Beautiful UI crafted with modern glassmorphism, tailored cyan/green accents, and micro-animations.
 
 ## 🛠 Tech Stack
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Database**: PostgreSQL (via [Prisma ORM](https://www.prisma.io/))
@@ -42,12 +42,11 @@ Create a `.env` file in the root directory based on `.env.example`:
 POSTGRES_PRISMA_URL="postgresql://postgres:password@localhost:5433/portfolio?schema=public"
 POSTGRES_URL_NON_POOLING="postgresql://postgres:password@localhost:5433/portfolio?schema=public"
 
-# Contact Form Delivery
-PERSONAL_EMAIL="your.email@gmail.com"
-SMTP_HOST="smtp.gmail.com"
-SMTP_PORT=587
-SMTP_USER="your.email@gmail.com"
-SMTP_PASS="your-app-password"
+# Forum administration and retention
+FORUM_ADMIN_PASSWORD="replace-with-a-strong-password"
+FORUM_ADMIN_SESSION_SECRET="replace-with-at-least-32-random-characters"
+RATE_LIMIT_SALT="replace-with-an-independent-random-value"
+FORUM_MAX_THREADS="50"
 ```
 
 ### 4. Database Setup
@@ -65,9 +64,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## 📁 Content Management
 
 All personal content is managed statically in the `content/` folder:
-- `content/projects/*.md` - Project detail pages and cards
-- `content/blog/*.md` - Blog feed and individual blog posts
-- `content/site/home.md` - Homepage content including Hero, Bio, Experience, and Education timelines
+- `src/content/projects/*.md` - Project detail pages and cards
+- `src/content/blog/*.md` - Blog feed and individual blog posts
+- `src/content/home.md` - Homepage content including Hero, Bio, Experience, and Education timelines
 
 Profile picture and resume should be placed in `public/avatar.png` and `public/resume.pdf` respectively.
 

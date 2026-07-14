@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import TimelineCard from "./TimelineCard";
 import ProjectCard from "./ProjectCard";
 import type { Timeline } from "@/data/timeline";
