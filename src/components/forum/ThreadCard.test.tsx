@@ -2,6 +2,15 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import ThreadCard from './ThreadCard';
 
+vi.mock('next/image', () => ({
+  default: (props: Record<string, unknown>) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { fill, unoptimized, ...rest } = props;
+    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+    return <img {...rest as React.ImgHTMLAttributes<HTMLImageElement>} />
+  }
+}));
+
 vi.mock('@/actions/forum', () => ({
   getForumVote: vi.fn().mockResolvedValue({ direction: 0 }),
   moderateForumItem: vi.fn(),

@@ -28,7 +28,15 @@ export default async function BlogPage({ params }: { params: Promise<{ slug: str
                     <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">{blog.frontmatter.title || blog.slug}</h1>
                     <time className="text-muted-foreground font-mono">{blog.frontmatter.date}</time>
                 </header>
-                <ReactMarkdown>{blog.content}</ReactMarkdown>
+                <ReactMarkdown
+                    components={{
+                        h1: 'h2',
+                        h2: 'h3',
+                        h3: 'h4',
+                        h4: 'h5',
+                        h5: 'h6',
+                    }}
+                >{blog.content}</ReactMarkdown>
             </article>
         </main>
     );

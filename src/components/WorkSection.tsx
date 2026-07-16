@@ -25,145 +25,141 @@ export default function WorkSection({
     const experienceRef = useRef<HTMLDivElement>(null);
     const educationRef = useRef<HTMLDivElement>(null);
     const projectsRef = useRef<HTMLDivElement>(null);
-    const endRef = useRef<HTMLDivElement>(null);
 
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const options = {
-            root: scrollRef.current,
-            rootMargin: "0px",
-            threshold: 0.5, // Trigger when 50% of the section is visible
-        };
+        if (!scrollRef.current) return;
 
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    if (entry.target === experienceRef.current) {
-                        setActiveSection("Experience");
-                    } else if (entry.target === educationRef.current) {
-                        setActiveSection("Education");
-                    } else if (entry.target === projectsRef.current) {
-                        setActiveSection("Featured Projects");
-                    } else if (entry.target === endRef.current) {
-                        setActiveSection(null);
-                    }
+            const getSectionName = (target: Element): SectionType => {
+                if (target === experienceRef.current) return "Experience";
+                if (target === educationRef.current) return "Education";
+                if (target === projectsRef.current) return "Featured Projects";
+                return null;
+            };
+
+            const getSectionOrder = (name: SectionType) => {
+                if (name === "Experience") return 1;
+                if (name === "Education") return 2;
+                if (name === "Featured Projects") return 3;
+                return 0;
+            };
+
+            const validEntries = entries.filter(e => e.isIntersecting && getSectionName(e.target) !== null);
+            if (validEntries.length === 0) return;
+
+            validEntries.sort((a, b) => {
+                if (b.intersectionRatio !== a.intersectionRatio) {
+                    return b.intersectionRatio - a.intersectionRatio;
                 }
+                const nameA = getSectionName(a.target);
+                const nameB = getSectionName(b.target);
+                return getSectionOrder(nameA) - getSectionOrder(nameB);
             });
-        }, options);
+
+            const bestSection = getSectionName(validEntries[0].target);
+            if (bestSection) {
+                setActiveSection(bestSection);
+            }
+        }, {
+            root: scrollRef.current,
+            rootMargin: "0px",
+            threshold: 0.5,
+        });
 
         if (experienceRef.current) observer.observe(experienceRef.current);
         if (educationRef.current) observer.observe(educationRef.current);
         if (projectsRef.current) observer.observe(projectsRef.current);
-        if (endRef.current) observer.observe(endRef.current);
 
         return () => {
             observer.disconnect();
         };
     }, []);
 
-    // Determine header color based on active section
-    const getHeaderColor = () => {
-        switch (activeSection) {
-            case "Experience": return "text-foreground";
-            case "Education": return "text-foreground";
-            case "Featured Projects": return "text-foreground";
-            default: return "text-foreground";
-        }
-    };
+    const getHeaderColor = () => "text-foreground";
 
     return (
-        <div className="h-screen w-full snap-start flex flex-col relative pt-20">
-            {/* Sticky Header */}
+        <section className="h-[100svh] w-full snap-start flex flex-col relative bg-background">
+            {/* Pinned Shared Header */}
             <div className={cn(
-                "z-20 py-8 bg-background/95 backdrop-blur-md transition-all duration-300 flex-none",
+                "flex-none pt-20 md:pt-24 pb-2 md:pb-4 z-20 transition-all duration-300",
                 !activeSection ? "opacity-0 pointer-events-none" : "opacity-100"
             )}>
-                <h2
-                    className={cn(
-                        "text-3xl md:text-4xl font-bold text-center transition-colors duration-500",
-                        getHeaderColor()
-                    )}
-                >
-                    {activeSection}
+                <h2 className={cn("text-3xl md:text-4xl font-bold text-center transition-colors duration-500", getHeaderColor())}>
+                    {activeSection || "Work"}
                 </h2>
             </div>
 
-            {/* Scrollable Content */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar scroll-smooth snap-y snap-mandatory scroll-pt-0">
-                <div className="flex flex-col h-full">
-                    {/* Experience Section */}
-                    <div ref={experienceRef} className="min-h-full w-full snap-start flex flex-col p-8 md:p-24 pt-4">
-                        <div className="w-full max-w-5xl mx-auto h-full flex flex-col relative">
-                            {/* Central Timeline Line */}
-                            <div className="absolute left-1/2 top-0 bottom-24 w-0.5 bg-gradient-to-b from-border via-border/30 to-transparent -translate-x-1/2 hidden md:block"></div>
-
-                            <div className="w-full space-y-12 flex-1 pb-24">
-                                {experienceData && experienceData.length > 0 ? (
-                                    [...experienceData]
-                                        .sort((a, b) => b.order - a.order)
-                                        .map((experience: Timeline, index: number) => {
-                                            const position = index % 2 === 0 ? "left" : "right";
-                                            return (
-                                                <div key={experience.id} className={`relative md:w-[calc(50%-30px)] ${position === "left" ? "md:mr-auto" : "md:ml-auto"
-                                                    }`}>
-                                                    <TimelineCard timeline={experience} position={position} />
-                                                </div>
-                                            );
-                                        })
-                                ) : (
-                                    <p className="text-center text-muted-foreground">No experience data found.</p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Education Section */}
-                    <div ref={educationRef} className="min-h-full w-full snap-start flex flex-col p-8 md:p-24 pt-4">
-                        <div className="w-full max-w-5xl mx-auto h-full flex flex-col relative">
-                            {/* Central Timeline Line */}
-                            <div className="absolute left-1/2 top-0 bottom-24 w-0.5 bg-gradient-to-b from-border via-border/30 to-transparent -translate-x-1/2 hidden md:block"></div>
-
-                            <div className="w-full space-y-12 flex-1 pb-24">
-                                {educationData && educationData.length > 0 ? (
-                                    [...educationData]
-                                        .sort((a, b) => b.order - a.order)
-                                        .map((education: Timeline, index: number) => {
-                                            const position = index % 2 === 0 ? "left" : "right";
-                                            return (
-                                                <div key={education.id} className={`relative md:w-[calc(50%-30px)] ${position === "left" ? "md:mr-auto" : "md:ml-auto"
-                                                    }`}>
-                                                    <TimelineCard timeline={education} position={position} />
-                                                </div>
-                                            );
-                                        })
-                                ) : (
-                                    <p className="text-center text-muted-foreground">No education data found.</p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Projects Section */}
-                    <div ref={projectsRef} className="min-h-full w-full snap-start flex flex-col p-8 md:p-24 pt-4">
-                        <div className="w-full mx-auto h-full flex flex-col">
-                            <div className="w-full space-y-6 flex-1">
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-24">
-                                    {highlightedProjectsData && highlightedProjectsData.length > 0 ? (
-                                        highlightedProjectsData.map((project: Project) => (
-                                            <div key={project.id} className="h-full">
-                                                <ProjectCard project={project} />
+            {/* Inner Snap Scroller */}
+            <div
+                ref={scrollRef}
+                tabIndex={0}
+                role="region"
+                aria-label="Experience, education, and featured projects"
+                className="flex-1 overflow-y-auto no-scrollbar scroll-smooth motion-reduce:scroll-auto snap-y snap-mandatory relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+                {/* Experience Stage */}
+                <div ref={experienceRef} className="h-full w-full shrink-0 snap-start flex flex-col px-4 md:px-8 pb-4">
+                    <div className="w-full max-w-5xl mx-auto h-full flex flex-col relative justify-center">
+                        <div className="w-full space-y-4">
+                            {experienceData && experienceData.length > 0 ? (
+                                [...experienceData]
+                                    .sort((a, b) => b.order - a.order)
+                                    .map((experience: Timeline, index: number) => {
+                                        const position = index % 2 === 0 ? "left" : "right";
+                                        return (
+                                            <div key={experience.id} className={`relative md:w-[calc(50%-20px)] ${position === "left" ? "md:mr-auto" : "md:ml-auto"}`}>
+                                                <TimelineCard timeline={experience} position={position} compact />
                                             </div>
-                                        ))
-                                    ) : (
-                                        <p className="text-center text-muted-foreground col-span-full">No projects found.</p>
-                                    )}
-                                </div>
-                            </div>
+                                        );
+                                    })
+                            ) : (
+                                <p className="text-center text-muted-foreground">No experience data found.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Education Stage */}
+                <div ref={educationRef} className="h-full w-full shrink-0 snap-start flex flex-col px-4 md:px-8 pb-4">
+                    <div className="w-full max-w-5xl mx-auto h-full flex flex-col relative justify-center">
+                        <div className="w-full space-y-4">
+                            {educationData && educationData.length > 0 ? (
+                                [...educationData]
+                                    .sort((a, b) => b.order - a.order)
+                                    .map((education: Timeline, index: number) => {
+                                        const position = index % 2 === 0 ? "left" : "right";
+                                        return (
+                                            <div key={education.id} className={`relative md:w-[calc(50%-20px)] ${position === "left" ? "md:mr-auto" : "md:ml-auto"}`}>
+                                                <TimelineCard timeline={education} position={position} compact />
+                                            </div>
+                                        );
+                                    })
+                            ) : (
+                                <p className="text-center text-muted-foreground">No education data found.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Projects Stage */}
+                <div ref={projectsRef} className="h-full w-full shrink-0 snap-start flex flex-col px-4 md:px-8 pb-4">
+                    <div className="w-full max-w-5xl mx-auto h-full flex flex-col relative justify-center">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                            {highlightedProjectsData && highlightedProjectsData.length > 0 ? (
+                                highlightedProjectsData.map((project: Project) => (
+                                    <div key={project.id} className="h-full">
+                                        <ProjectCard project={project} compact />
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-center text-muted-foreground col-span-full">No projects found.</p>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }

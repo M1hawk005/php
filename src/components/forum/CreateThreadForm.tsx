@@ -48,8 +48,14 @@ export default function CreateThreadForm() {
       </div>
       {error && <p className="mb-4 border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-400" role="alert">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input aria-label="Thread subject" value={title} onChange={(event) => setTitle(event.target.value)} maxLength={FORUM_LIMITS.title} placeholder="Subject (optional)" className="min-h-12 w-full border border-border bg-background p-3 outline-none focus:border-primary" />
-        <textarea aria-label="Thread content" value={content} onChange={(event) => setContent(event.target.value)} maxLength={FORUM_LIMITS.content} required rows={6} placeholder="Comment. Lines beginning with > become greentext." className="w-full resize-y border border-border bg-background p-3 font-mono text-base outline-none focus:border-primary sm:text-sm" />
+        <div className="flex flex-col gap-2">
+          <label htmlFor="thread-subject" className="text-sm font-medium text-muted-foreground">Subject (optional)</label>
+          <input id="thread-subject" value={title} onChange={(event) => setTitle(event.target.value)} maxLength={FORUM_LIMITS.title} placeholder="Enter a subject..." className="min-h-12 w-full border border-border bg-background p-3 outline-none focus:border-primary" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="thread-comment" className="text-sm font-medium text-muted-foreground">Comment <span className="text-primary" aria-label="required">*</span></label>
+          <textarea id="thread-comment" value={content} onChange={(event) => setContent(event.target.value)} maxLength={FORUM_LIMITS.content} required rows={6} placeholder="Lines beginning with > become greentext." className="w-full resize-y border border-border bg-background p-3 font-mono text-base outline-none focus:border-primary sm:text-sm" />
+        </div>
         {asciiImage ? (
           <div className="relative inline-block border border-border bg-[#09090b] p-2">
             <img src={asciiImage} alt="Attached ASCII art" className="max-h-40 object-contain" />

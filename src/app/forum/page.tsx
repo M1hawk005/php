@@ -27,9 +27,12 @@ export default async function ForumPage() {
         <p className="text-muted-foreground">Anonymous discussion board. Vote thoughtfully; the strongest active threads remain visible.</p>
       </header>
       <ForumAdminBar isAdmin={admin} />
-      <div className="mb-12"><CreateThreadForm /></div>
+      {!unavailable && <div className="mb-12"><CreateThreadForm /></div>}
       {unavailable ? (
-        <div className="border border-red-500/30 bg-red-500/5 p-8 text-center text-red-300">The board is temporarily unavailable. Please try again shortly.</div>
+        <div className="border border-red-500/30 bg-red-500/5 p-8 text-center text-red-300" role="alert" aria-live="polite">
+          <h2 className="mb-2 font-bold text-lg">Service Unavailable</h2>
+          <p>The board is temporarily unavailable. Thread creation and viewing are disabled until service is restored.</p>
+        </div>
       ) : threads.length ? (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {threads.map((thread) => (
