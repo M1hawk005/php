@@ -15,9 +15,9 @@ export default async function ProjectsPage() {
 
     return (
         <main className="min-h-screen pt-28 pb-12 px-4 md:px-8 max-w-7xl mx-auto">
-            <div className="mb-8">
+            {/* <div className="mb-8">
                 <h1 className="text-4xl font-bold text-foreground">My Projects</h1>
-            </div>
+            </div> */}
 
             <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
                 {projects.map((project) => (

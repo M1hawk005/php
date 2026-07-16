@@ -78,7 +78,7 @@ export default async function HomePage() {
             {/* Text Content */}
             <div className="text-left space-y-8 md:border-l md:border-border/50 md:pl-8">
               <h2 className="text-sm md:text-base font-mono text-accent uppercase tracking-wider">
-                01. About
+                About
               </h2>
               <div className="text-lg md:text-xl leading-relaxed text-muted-foreground space-y-6 prose prose-invert max-w-none">
                 <ReactMarkdown>{content.bio || 'Loading bio....'}</ReactMarkdown>

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import WorkSection from './WorkSection';
 import type { Timeline } from '@/data/timeline';
@@ -27,10 +27,13 @@ window.matchMedia = vi.fn().mockImplementation(query => ({
 
 describe('WorkSection', () => {
     const mockExperienceData: Timeline[] = [
-        { id: 1, title: 'Exp 1', order: 1 } as Timeline
+        { id: 1, title: 'Exp 1', order: 1 } as Timeline,
+        { id: 2, title: 'Exp 2', order: 2 } as Timeline,
+        { id: 3, title: 'Exp 3', order: 3 } as Timeline,
     ];
     const mockEducationData: Timeline[] = [
-        { id: 2, title: 'Edu 1', order: 1 } as Timeline
+        { id: 4, title: 'Edu 1', order: 1 } as Timeline,
+        { id: 5, title: 'Edu 2', order: 2 } as Timeline,
     ];
 
     afterEach(() => {
@@ -49,6 +52,7 @@ describe('WorkSection', () => {
         // Outer section should not have sticky header on mobile anymore
         const headingContainer = screen.getByText('Experience').closest('div');
         expect(headingContainer?.className).not.toContain('sticky');
+        expect(headingContainer).toHaveClass('pt-22', 'md:pt-26');
 
         // Verify inner scroller has snap-mandatory and snap-y
         const scroller = container.querySelector('.snap-y.snap-mandatory');
@@ -66,6 +70,14 @@ describe('WorkSection', () => {
         expect(experienceStage).toHaveClass('snap-start');
         expect(experienceStage).not.toHaveClass('overflow-y-auto');
         expect(experienceStage).not.toHaveClass('overflow-y-scroll');
+
+        const rails = container.querySelectorAll('[data-timeline-rail]');
+        expect(rails).toHaveLength(1);
+        expect(rails[0]).toHaveAttribute('aria-hidden', 'true');
+        expect(rails[0]).toHaveAttribute('data-timeline-rail', 'experience');
+        expect((rails[0] as HTMLElement).style.height).toBe('16rem');
+        expect(rails[0].parentElement).toHaveClass('sticky', 'top-1/2', 'w-full');
+        expect(container.querySelectorAll('[data-timeline-node]')).toHaveLength(5);
     });
 
     it('creates IntersectionObserver for inner scroller on all viewports without window scroll listeners', () => {
@@ -118,20 +130,24 @@ describe('WorkSection', () => {
         });
 
         render(
-            <WorkSection experienceData={[]} educationData={[]} highlightedProjectsData={[]} />
+            <WorkSection
+                experienceData={mockExperienceData}
+                educationData={mockEducationData}
+                highlightedProjectsData={[]}
+            />
         );
 
         expect(observerCallback).not.toBeNull();
 
         // Create mock entries, both intersecting, same ratio
         const entryExp = {
-            target: screen.getByText('No experience data found.').closest('.shrink-0'),
+            target: screen.getByText('Exp 1').closest('.shrink-0'),
             isIntersecting: true,
             intersectionRatio: 0.6
         } as unknown as IntersectionObserverEntry;
 
         const entryEdu = {
-            target: screen.getByText('No education data found.').closest('.shrink-0'),
+            target: screen.getByText('Edu 1').closest('.shrink-0'),
             isIntersecting: true,
             intersectionRatio: 0.6
         } as unknown as IntersectionObserverEntry;
@@ -146,5 +162,29 @@ describe('WorkSection', () => {
 
         expect(stateAfterFirst).toBe(stateAfterSecond);
         expect(stateAfterFirst).toBe('Experience'); // Because Experience is first in DOM order
+
+        act(() => {
+            observerCallback!([
+                { ...entryEdu, intersectionRatio: 0.9 },
+                { ...entryExp, intersectionRatio: 0.1 },
+            ], {} as IntersectionObserver);
+        });
+
+        const sharedRail = document.querySelector('[data-timeline-rail]');
+        expect(sharedRail).toHaveAttribute('data-timeline-rail', 'education');
+        expect((sharedRail as HTMLElement).style.height).toBe('8rem');
+        expect(sharedRail?.querySelector('.timeline-flow-down')).toHaveClass('via-secondary');
+        expect(screen.getByRole('heading', { level: 2 })).toHaveClass('text-secondary');
+
+        act(() => {
+            observerCallback!([{
+                target: screen.getByText('No projects found.').closest('.shrink-0'),
+                isIntersecting: true,
+                intersectionRatio: 0.9,
+            } as unknown as IntersectionObserverEntry], {} as IntersectionObserver);
+        });
+
+        expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Featured Projects');
+        expect(screen.getByRole('heading', { level: 2 })).toHaveClass('text-accent');
     });
 });
