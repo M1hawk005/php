@@ -54,9 +54,8 @@ export default function Header({ resumeUrl }: HeaderProps) {
         <>
             <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/95 backdrop-blur-lg md:hidden">
                 <div className="flex h-16 items-center justify-between px-4">
-                    <Link href="/" className="flex min-h-11 items-center gap-2 rounded-md px-2 font-mono font-bold" aria-label="Home">
+                    <Link href="/" className="flex min-h-11 min-w-11 items-center justify-center rounded-md px-2 font-mono font-bold transition-colors hover:bg-primary/10" aria-label="Home">
                         <Home size={20} className={pathname === "/" ? "fill-primary/30 text-primary" : ""} />
-                        <span>Aditya Malik</span>
                     </Link>
                     <button type="button" onClick={() => setMobileOpen((open) => !open)} className="flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary" aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileOpen} aria-controls="mobile-navigation">
                         {mobileOpen ? <X size={22} /> : <Menu size={22} />}
