@@ -30,8 +30,8 @@ export default function TimelineCard({ timeline, compact }: TimelineCardProps) {
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-xl opacity-0 group-hover:opacity-100 transition duration-500 blur-sm"></div>
             )}
 
-            <Card className={`flex flex-col h-full relative overflow-hidden bg-card/50 backdrop-blur-sm border-border/40 hover:border-primary/30 transition-all duration-500 ${compact ? 'p-0' : 'group-hover:translate-y-[-2px]'} `}>
-                <CardHeader className="relative z-10 pb-2">
+            <Card className={`flex flex-col justify-center h-full relative overflow-hidden bg-card/50 backdrop-blur-sm border-border/40 hover:border-primary/30 transition-all duration-500 ${compact ? 'min-h-28 py-4' : 'group-hover:translate-y-[-2px]'} `}>
+                <CardHeader className={`relative z-10 ${compact ? 'py-0' : 'pb-2'}`}>
                     <div className="flex justify-between items-start gap-4">
                         <div className="space-y-1.5">
                             {!isNullish(timeline.title) && (
@@ -57,11 +57,13 @@ export default function TimelineCard({ timeline, compact }: TimelineCardProps) {
                     </div>
                 </CardHeader>
 
-                <CardContent className={`flex-1 relative z-10 py-2 ${compact ? 'text-xs' : 'text-sm'}`}>
-                    <p className={`text-muted-foreground/90 leading-relaxed ${compact ? 'line-clamp-2' : ''}`}>
-                        {!isNullish(timeline.description) ? timeline.description : ''}
-                    </p>
-                </CardContent>
+                {!isNullish(timeline.description) && (
+                    <CardContent className={`relative z-10 py-2 ${compact ? 'text-xs' : 'text-sm'}`}>
+                        <p className={`text-muted-foreground/90 leading-relaxed ${compact ? 'line-clamp-2' : ''}`}>
+                            {timeline.description}
+                        </p>
+                    </CardContent>
+                )}
 
                 {!isNullish(timeline.marksheetUrl) && (
                     <CardFooter className={`mt-auto relative z-10 ${compact ? 'pt-2 pb-4' : 'pt-4 pb-6'}`}>
