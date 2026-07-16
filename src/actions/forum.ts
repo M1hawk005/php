@@ -4,7 +4,8 @@ import { createHash } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { clearForumAdminSession, isForumAdmin, setForumAdminSession, verifyAdminPassword } from '@/lib/forum-auth';
-import { enforceRateLimit, validateAsciiImage, validateForumText } from '@/lib/forum-security';
+import { enforceRateLimit, forumSecuritySalt, isUuid, validateAsciiImage, validateForumText } from '@/lib/forum-security';
+import { FORUM_LIMITS } from '@/lib/forum-limits';
 
 type ForumTarget = 'thread' | 'post';
 type ModerationAction = 'delete' | 'pin' | 'unpin' | 'archive' | 'restore';
@@ -16,9 +17,8 @@ function refresh(threadId?: string, postId?: string) {
 }
 
 function identityHash(value: string) {
-  if (!/^[0-9a-f-]{36}$/i.test(value)) return null;
-  const salt = process.env.RATE_LIMIT_SALT || process.env.FORUM_ADMIN_SESSION_SECRET || 'local-development';
-  return createHash('sha256').update(`${salt}:${value}`).digest('hex');
+  if (!isUuid(value)) return null;
+  return createHash('sha256').update(`${forumSecuritySalt()}:${value}`).digest('hex');
 }
 
 async function enforceThreadRetention() {
@@ -82,6 +82,7 @@ async function deleteForumRecord(targetType: ForumTarget, targetId: string) {
 
 export async function loginForumAdmin(formData: FormData) {
   const password = String(formData.get('password') || '');
+  if (password.length > 256) return { error: 'Invalid admin password.' };
   if (!(await enforceRateLimit('admin-login', 5, 15 * 60))) return { error: 'Too many login attempts. Try again later.' };
   if (!verifyAdminPassword(password)) return { error: 'Invalid admin password.' };
   try {
@@ -142,14 +143,20 @@ export async function createReply(formData: FormData) {
   const threadId = String(formData.get('threadId') || '');
   const parentPostId = String(formData.get('parentPostId') || '') || null;
   const text = validateForumText('', String(formData.get('content') || ''));
-  if (!threadId || 'error' in text) return 'error' in text ? text : { error: 'Missing thread.' };
+  if (!isUuid(threadId) || (parentPostId && !isUuid(parentPostId)) || 'error' in text) {
+    return 'error' in text ? text : { error: 'Invalid thread.' };
+  }
   const image = validateAsciiImage(formData.get('imageUrl'));
   if ('error' in image) return image;
 
   try {
     const post = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtext(${`forum-thread:${threadId}`}))`;
       const thread = await tx.thread.findUnique({ where: { id: threadId }, select: { is_archived: true } });
       if (!thread || (thread.is_archived && !admin)) throw new Error('THREAD_UNAVAILABLE');
+
+      const postCount = await tx.post.count({ where: { thread_id: threadId } });
+      if (postCount >= FORUM_LIMITS.postsPerThread) throw new Error('THREAD_FULL');
 
       if (parentPostId) {
         const parent = await tx.post.findUnique({
@@ -158,6 +165,8 @@ export async function createReply(formData: FormData) {
         });
         if (!parent || parent.thread_id !== threadId) throw new Error('COMMENT_UNAVAILABLE');
         if (parent.parent_post_id) throw new Error('MAX_DEPTH');
+        const replyCount = await tx.post.count({ where: { parent_post_id: parentPostId } });
+        if (replyCount >= FORUM_LIMITS.repliesPerComment) throw new Error('DISCUSSION_FULL');
       }
 
       const created = await tx.post.create({
@@ -192,13 +201,17 @@ export async function createReply(formData: FormData) {
     if (error instanceof Error && error.message === 'THREAD_UNAVAILABLE') return { error: 'This thread is unavailable or archived.' };
     if (error instanceof Error && error.message === 'COMMENT_UNAVAILABLE') return { error: 'This comment is unavailable.' };
     if (error instanceof Error && error.message === 'MAX_DEPTH') return { error: 'Comment discussions are limited to one reply level.' };
+    if (error instanceof Error && error.message === 'THREAD_FULL') return { error: 'This thread has reached its comment limit.' };
+    if (error instanceof Error && error.message === 'DISCUSSION_FULL') return { error: 'This comment has reached its reply limit.' };
     console.error('Error creating reply:', error);
     return { error: 'Failed to post reply.' };
   }
 }
 
 export async function voteForumItem(targetType: ForumTarget, targetId: string, direction: 1 | -1, voterId: string) {
-  if (!/^[0-9a-f-]{36}$/i.test(targetId) || !/^[0-9a-f-]{36}$/i.test(voterId)) return { error: 'Invalid vote.' };
+  if ((targetType !== 'thread' && targetType !== 'post') || (direction !== 1 && direction !== -1) || !isUuid(targetId) || !isUuid(voterId)) {
+    return { error: 'Invalid vote.' };
+  }
   if (!(await enforceRateLimit('forum-vote', 60, 60))) return { error: 'Voting too quickly.' };
   const voterHash = identityHash(voterId);
   if (!voterHash) return { error: 'Invalid vote.' };
@@ -246,7 +259,7 @@ export async function voteForumItem(targetType: ForumTarget, targetId: string, d
 
 export async function getForumVote(targetType: ForumTarget, targetId: string, voterId: string) {
   const voterHash = identityHash(voterId);
-  if (!/^[0-9a-f-]{36}$/i.test(targetId) || !voterHash) return { direction: 0 as const };
+  if ((targetType !== 'thread' && targetType !== 'post') || !isUuid(targetId) || !voterHash) return { direction: 0 as const };
   const vote = await prisma.forumVote.findUnique({
     where: {
       target_type_target_id_voter_hash: {
@@ -262,6 +275,7 @@ export async function getForumVote(targetType: ForumTarget, targetId: string, vo
 }
 
 export async function deleteForumItem(targetType: ForumTarget, targetId: string, ownerId: string) {
+  if ((targetType !== 'thread' && targetType !== 'post') || !isUuid(targetId)) return { error: 'Invalid content.' };
   const admin = await isForumAdmin();
   const ownerHash = identityHash(ownerId);
   if (!admin && !ownerHash) return { error: 'Unable to verify ownership.' };
@@ -281,6 +295,11 @@ export async function deleteForumItem(targetType: ForumTarget, targetId: string,
 }
 
 export async function moderateForumItem(targetType: ForumTarget, targetId: string, action: ModerationAction) {
+  if (
+    (targetType !== 'thread' && targetType !== 'post')
+    || !isUuid(targetId)
+    || !['delete', 'pin', 'unpin', 'archive', 'restore'].includes(action)
+  ) return { error: 'Invalid moderation request.' };
   if (!(await isForumAdmin())) return { error: 'Administrator access required.' };
   try {
     if (action === 'delete') {

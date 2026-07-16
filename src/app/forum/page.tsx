@@ -14,6 +14,7 @@ export default async function ForumPage() {
     threads = await prisma.thread.findMany({
       where: admin ? undefined : { is_archived: false },
       orderBy: [{ is_pinned: 'desc' }, { bumped_at: 'desc' }],
+      take: admin ? 200 : 50,
     });
   } catch (error) {
     unavailable = true;

@@ -5,6 +5,8 @@ import { prisma } from '@/lib/prisma';
 import { isForumAdmin } from '@/lib/forum-auth';
 import Post from '@/components/forum/Post';
 import ReplyForm from '@/components/forum/ReplyForm';
+import { FORUM_LIMITS } from '@/lib/forum-limits';
+import { isUuid } from '@/lib/forum-security';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +16,7 @@ type Props = {
 
 export default async function CommentDiscussionPage({ params }: Props) {
   const { threadId, postId } = await params;
+  if (!isUuid(threadId) || !isUuid(postId)) notFound();
   const admin = await isForumAdmin();
   const thread = await prisma.thread.findUnique({
     where: { id: threadId },
@@ -23,7 +26,7 @@ export default async function CommentDiscussionPage({ params }: Props) {
 
   const comment = await prisma.post.findFirst({
     where: { id: postId, thread_id: threadId, parent_post_id: null },
-    include: { replies: { orderBy: { created_at: 'asc' } } },
+    include: { replies: { orderBy: { created_at: 'asc' }, take: FORUM_LIMITS.repliesPerComment } },
   });
   if (!comment) notFound();
 

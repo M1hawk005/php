@@ -47,7 +47,7 @@ export default function ForumAdminBar({ isAdmin }: { isAdmin: boolean }) {
             <KeyRound size={14} /> Administrator password
           </label>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <input id="forum-admin-password" name="password" type="password" required autoFocus className="min-h-12 min-w-0 flex-1 border border-border bg-background px-3 py-2 text-base outline-none focus:border-primary sm:text-sm" />
+            <input id="forum-admin-password" name="password" type="password" required maxLength={256} autoComplete="current-password" autoFocus className="min-h-12 min-w-0 flex-1 border border-border bg-background px-3 py-2 text-base outline-none focus:border-primary sm:text-sm" />
             <button disabled={busy} className="flex min-h-12 items-center justify-center border border-primary px-4 py-2 text-sm text-primary disabled:opacity-50">
               {busy ? <Loader2 size={14} className="animate-spin" /> : 'Enter'}
             </button>

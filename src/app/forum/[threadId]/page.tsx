@@ -6,11 +6,14 @@ import { isForumAdmin } from '@/lib/forum-auth';
 import Post from '@/components/forum/Post';
 import ReplyForm from '@/components/forum/ReplyForm';
 import AdminControls from '@/components/forum/AdminControls';
+import { FORUM_LIMITS } from '@/lib/forum-limits';
+import { isUuid } from '@/lib/forum-security';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ThreadPage({ params }: { params: Promise<{ threadId: string }> }) {
   const { threadId } = await params;
+  if (!isUuid(threadId)) notFound();
   const admin = await isForumAdmin();
   const thread = await prisma.thread.findUnique({
     where: { id: threadId },
@@ -18,6 +21,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ threadI
       posts: {
         where: { parent_post_id: null },
         orderBy: { created_at: 'asc' },
+        take: FORUM_LIMITS.postsPerThread,
       },
     },
   });

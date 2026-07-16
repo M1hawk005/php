@@ -70,6 +70,7 @@ model RateLimitEvent {
   created_at  DateTime @default(now())
 
   @@index([fingerprint, action, created_at])
+  @@index([created_at])
   @@map("rate_limit_events")
 }
 
