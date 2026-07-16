@@ -5,7 +5,9 @@ import type { Timeline } from '@/data/timeline';
 
 describe('TimelineCard', () => {
     const mockTimeline: Timeline = {
-        id: 1,
+        id: 'software-engineer',
+        slug: 'software-engineer',
+        category: 'experience',
         title: 'Software Engineer',
         institution: { name: 'Tech Corp', location: 'San Francisco, CA' },
         description: 'Worked on cool things.',
@@ -24,6 +26,13 @@ describe('TimelineCard', () => {
 
         const link = screen.getByRole('link', { name: /view scorecard/i });
         expect(link).toHaveAttribute('href', 'https://example.com/scorecard');
+    });
+
+    it('links Markdown-backed cards to their detail page', () => {
+        render(<TimelineCard timeline={mockTimeline} />);
+
+        expect(screen.getByRole('link', { name: /view details for software engineer/i }))
+            .toHaveAttribute('href', '/timeline/software-engineer');
     });
 
     it('renders correctly without optional fields like marksheetUrl', () => {

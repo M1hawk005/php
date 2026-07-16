@@ -1,5 +1,9 @@
+export type TimelineCategory = "experience" | "education";
+
 export type Timeline = {
-    id: number;
+    id: number | string;
+    slug?: string;
+    category?: TimelineCategory;
     title: string;
     institution: Record<string, string>;
     description: string;

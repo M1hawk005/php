@@ -66,7 +66,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 All personal content is managed statically in the `content/` folder:
 - `src/content/projects/*.md` - Project detail pages and cards
 - `src/content/blog/*.md` - Blog feed and individual blog posts
-- `src/content/home.md` - Homepage content including Hero, Bio, Experience, and Education timelines
+- `src/content/home.md` - Homepage Intro and Bio content
+- `src/content/timeline/*.md` - Experience and Education timeline cards and detail pages
 
 Profile picture and resume should be placed in `public/avatar.png` and `public/resume.pdf` respectively.
 

@@ -6,10 +6,9 @@ import EmailSidebar from "@/components/EmailSidebar";
 import WorkSection from "@/components/WorkSection";
 import EndSection from "@/components/EndSection";
 import ReactMarkdown from 'react-markdown';
-import type { Timeline } from '@/data/timeline';
 
 export default async function HomePage() {
-  const content = getHomeContent() as { intro?: string; bio?: string; experience?: Timeline[]; education?: Timeline[] };
+  const content = getHomeContent();
   const projects = getProjects();
 
   // Highlighted projects

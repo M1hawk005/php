@@ -1,14 +1,71 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import type { Timeline, TimelineCategory } from '@/data/timeline';
 
 const contentDir = path.join(process.cwd(), 'src', 'content');
 
-export function getHomeContent() {
-    const filePath = path.join(contentDir, 'home.md');
+const isTimelineCategory = (value: unknown): value is TimelineCategory =>
+    value === 'experience' || value === 'education';
+
+export function getTimelines(): Timeline[] {
+    const timelineDir = path.join(contentDir, 'timeline');
+
+    try {
+        return fs.readdirSync(timelineDir)
+            .filter(name => name.endsWith('.md'))
+            .map(fileName => {
+                const slug = fileName.replace(/\.md$/, '');
+                const filePath = path.join(timelineDir, fileName);
+                const fileContents = fs.readFileSync(filePath, 'utf8');
+                const { data, content } = matter(fileContents);
+
+                if (!isTimelineCategory(data.category)) {
+                    throw new Error(`Invalid timeline category in ${fileName}`);
+                }
+
+                return {
+                    id: slug,
+                    slug,
+                    category: data.category,
+                    title: data.title || slug,
+                    institution: {
+                        name: data.institution || '',
+                        location: data.location || '',
+                    },
+                    duration: data.duration || '',
+                    description: content.trim(),
+                    marksheetUrl: data.marksheetUrl || '',
+                    order: Number(data.order) || 0,
+                } satisfies Timeline;
+            });
+    } catch (error) {
+        console.error('Failed to read timeline entries', error);
+        return [];
+    }
+}
+
+export function getTimelineBySlug(slug: string) {
+    const filePath = path.join(contentDir, 'timeline', `${slug}.md`);
+
     try {
         const fileContents = fs.readFileSync(filePath, 'utf8');
-        // Simple parser to extract sections separated by `# SectionName`
+        const { data, content } = matter(fileContents);
+
+        if (!isTimelineCategory(data.category)) return null;
+
+        return { slug, frontmatter: data, content };
+    } catch {
+        return null;
+    }
+}
+
+export function getHomeContent() {
+    const filePath = path.join(contentDir, 'home.md');
+    const timelines = getTimelines();
+
+    try {
+        const fileContents = fs.readFileSync(filePath, 'utf8');
         const sections: Record<string, string> = {};
         let currentSection = 'default';
 
@@ -22,48 +79,20 @@ export function getHomeContent() {
             }
         }
 
-        // Parse timeline sections
-        const parseTimeline = (markdown: string, category: string) => {
-            if (!markdown) return [];
-            const blocks = markdown.split('## ').filter(Boolean);
-            return blocks.map((block, index) => {
-                const lines = block.trim().split('\n');
-                const title = lines[0].trim();
-                let institution = '';
-                let duration = '';
-                let description = '';
-
-                if (lines[1] && lines[1].includes('|')) {
-                    const parts = lines[1].split('|');
-                    institution = parts[0].replace(/\*\*/g, '').trim();
-                    duration = parts[1].trim();
-                    description = lines.slice(2).join('\n').trim();
-                } else if (lines[1]) {
-                    institution = lines[1].replace(/\*\*/g, '').trim();
-                    description = lines.slice(2).join('\n').trim();
-                }
-
-                return {
-                    id: `${category}-${index}`,
-                    title,
-                    category,
-                    institution: { name: institution },
-                    duration,
-                    description,
-                    order: index
-                };
-            });
-        };
-
         return {
-            intro: sections['intro'] || '',
-            bio: sections['bio'] || '',
-            experience: parseTimeline(sections['experience'], 'experience'),
-            education: parseTimeline(sections['education'], 'education')
+            intro: sections.intro || '',
+            bio: sections.bio || '',
+            experience: timelines.filter(entry => entry.category === 'experience'),
+            education: timelines.filter(entry => entry.category === 'education'),
         };
     } catch (error) {
-        console.error("Failed to read home.md", error);
-        return {};
+        console.error('Failed to read home.md', error);
+        return {
+            intro: '',
+            bio: '',
+            experience: timelines.filter(entry => entry.category === 'experience'),
+            education: timelines.filter(entry => entry.category === 'education'),
+        };
     }
 }
 
@@ -119,7 +148,6 @@ export function getBlogs() {
             };
         });
 
-        // Sort by date descending
         return blogs.sort((a, b) => {
             return new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime();
         });
