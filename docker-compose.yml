@@ -4,10 +4,15 @@ services:
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: portfolio
-    ports:
-      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d portfolio"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - web
 
@@ -17,12 +22,25 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
-      - POSTGRES_PRISMA_URL=postgresql://postgres:password@db:5432/portfolio?schema=public
-      - POSTGRES_URL_NON_POOLING=postgresql://postgres:password@db:5432/portfolio?schema=public
+      POSTGRES_PRISMA_URL: postgresql://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/portfolio?schema=public
+      POSTGRES_URL_NON_POOLING: postgresql://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/portfolio?schema=public
+      FORUM_ADMIN_PASSWORD: ${FORUM_ADMIN_PASSWORD:?Set FORUM_ADMIN_PASSWORD in .env}
+      FORUM_ADMIN_SESSION_SECRET: ${FORUM_ADMIN_SESSION_SECRET:?Set FORUM_ADMIN_SESSION_SECRET in .env}
+      RATE_LIMIT_SALT: ${RATE_LIMIT_SALT:?Set RATE_LIMIT_SALT in .env}
+      FORUM_IP_HEADER: x-forwarded-for
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     networks:
       - web
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   caddy:
     image: caddy:alpine
@@ -42,5 +60,6 @@ services:
 networks:
   web:
 volumes:
+  postgres_data:
   caddy_data:
   caddy_config:
