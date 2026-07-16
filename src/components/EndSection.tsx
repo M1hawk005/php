@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function EndSection() {
     return (
-        <section className="h-screen w-full snap-start flex flex-col items-center justify-center p-8 md:p-24 relative overflow-hidden">
+        <section className="h-[100svh] w-full snap-start flex flex-col items-center justify-center p-8 md:p-24 relative overflow-hidden">
             <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 w-full max-w-2xl">
                 <div className="h-px w-24 bg-border mb-4"></div>
 

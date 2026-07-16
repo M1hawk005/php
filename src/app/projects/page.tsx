@@ -19,9 +19,11 @@ export default async function ProjectsPage() {
                 <h1 className="text-4xl font-bold text-foreground">My Projects</h1>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
                 {projects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
+                    <div key={project.id} className="break-inside-avoid">
+                        <ProjectCard project={project} />
+                    </div>
                 ))}
             </div>
         </main>

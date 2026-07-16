@@ -1,7 +1,5 @@
 import { getHomeContent, getProjects } from "@/lib/markdown";
 
-
-import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import SocialSidebar from "@/components/SocialSidebar";
 import EmailSidebar from "@/components/EmailSidebar";
@@ -28,7 +26,6 @@ export default async function HomePage() {
     }))
     .slice(0, 3);
 
-  const profileImageUrl = "/avatar.png"; // Statically served
 
   const intro = {
     name: "Aditya Malik",
@@ -37,7 +34,7 @@ export default async function HomePage() {
   };
 
   return (
-    <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-background text-foreground relative scroll-smooth no-scrollbar overscroll-y-none [&::-webkit-scrollbar]:hidden">
+    <div className="h-[100svh] w-full overflow-y-scroll snap-y snap-mandatory bg-background text-foreground relative scroll-smooth no-scrollbar overscroll-y-none [&::-webkit-scrollbar]:hidden motion-reduce:scroll-auto">
       <main className="w-full">
         <SocialSidebar
           github="https://github.com/M1hawk005"
@@ -47,54 +44,46 @@ export default async function HomePage() {
           email="aditya.malik32x@gmail.com"
         />
         {/* Intro Section */}
-        <section className="h-screen w-full snap-start flex flex-col justify-center items-start text-left p-8 md:p-24 pb-20 relative max-w-7xl mx-auto overflow-hidden">
-          <span className="text-muted-foreground font-mono mb-4 text-lg">Hi, my name is</span>
-          <h1 className="text-6xl md:text-8xl font-bold text-foreground mb-4">
-            {intro.name}.
-          </h1>
-          <h2 className="text-4xl md:text-4xl font-bold text-muted-foreground mb-8">
-            {intro.bio}.
-          </h2>
-          <div className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed prose prose-invert">
-            <ReactMarkdown>{intro.html_text}</ReactMarkdown>
+        <section className="h-[100svh] w-full snap-start flex flex-col justify-center items-start text-left px-6 md:px-24 pt-[80px] md:pt-[106px] pb-6 md:pb-8 relative max-w-7xl mx-auto overflow-hidden">
+          <div className="flex-1 flex flex-col justify-center w-full">
+            <span className="text-muted-foreground font-mono mb-2 md:mb-4 text-sm md:text-lg">Hi, my name is</span>
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold text-foreground mb-2 md:mb-4">
+              {intro.name}.
+            </h1>
+            <h2 className="text-2xl sm:text-4xl md:text-4xl font-bold text-muted-foreground mb-4 md:mb-8">
+              {intro.bio}.
+            </h2>
+            <div className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mb-6 md:mb-12 leading-relaxed prose prose-invert">
+              <p className="m-0">
+                Software Engineer based in Melbourne. Specializing in AI/ML and building robust scientific software systems.
+              </p>
+            </div>
+            <div>
+              <a
+                href="mailto:aditya.malik32x@gmail.com"
+                className="px-7 py-3 min-h-[44px] flex items-center justify-center w-fit border border-border text-foreground rounded hover:border-accent hover:text-accent hover:bg-accent/10 transition-colors font-mono"
+              >
+                Get In Touch
+              </a>
+            </div>
           </div>
-          <a
-            href="mailto:aditya.malik32x@gmail.com"
-            className="px-7 py-3 border border-border text-foreground rounded hover:border-accent hover:text-accent hover:bg-accent/10 transition-colors font-mono"
-          >
-            Get In Touch
-          </a>
 
-          <div className="absolute bottom-25 left-1/2 -translate-x-1/2 animate-bounce">
-            <ChevronDown className="text-muted-foreground w-8 h-8" />
+          <div className="flex-none flex justify-center w-full mt-5 pb-4 md:pb-8">
+            <ChevronDown className="text-muted-foreground w-8 h-8 animate-bounce motion-reduce:animate-none" />
           </div>
         </section>
 
         {/* About Section */}
-        <section className="h-screen w-full snap-start flex items-center justify-center p-8 md:p-24 pb-20 relative overflow-hidden">
-          <div className="flex flex-col md:flex-row items-center gap-16 max-w-7xl w-full mx-auto">
+        <section className="h-[100svh] w-full snap-start flex items-center justify-center p-8 md:p-24 pb-20 relative overflow-hidden">
+          <div className="max-w-3xl w-full mx-auto flex flex-col justify-center">
             {/* Text Content */}
-            <div className="flex-1 text-left space-y-8 order-2 md:order-1">
-              <h2 className="flex items-center text-3xl md:text-4xl font-bold text-foreground">
-                About Me
+            <div className="text-left space-y-8 md:border-l md:border-border/50 md:pl-8">
+              <h2 className="text-sm md:text-base font-mono text-accent uppercase tracking-wider">
+                01. About
               </h2>
-              <div className="text-lg md:text-xl leading-relaxed text-muted-foreground space-y-4 prose prose-invert">
+              <div className="text-lg md:text-xl leading-relaxed text-muted-foreground space-y-6 prose prose-invert max-w-none">
                 <ReactMarkdown>{content.bio || 'Loading bio....'}</ReactMarkdown>
               </div>
-            </div>
-
-            {/* Image with Frame */}
-            <div className="relative group order-1 md:order-2">
-              <div className="relative w-64 h-64 md:w-80 md:h-80 z-10">
-                <Image
-                  src={profileImageUrl}
-                  alt="Profile"
-                  fill
-                  className="object-cover rounded bg-muted grayscale hover:grayscale-0 transition-all duration-500"
-                />
-              </div>
-              {/* Decorative Frame */}
-              <div className="absolute top-5 left-5 w-64 h-64 md:w-80 md:h-80 border-2 border-border rounded z-0 group-hover:top-3 group-hover:left-3 group-hover:border-accent transition-all duration-300"></div>
             </div>
           </div>
         </section>

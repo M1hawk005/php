@@ -54,7 +54,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
         <>
             <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/95 backdrop-blur-lg md:hidden">
                 <div className="flex h-16 items-center justify-between px-4">
-                    <Link href="/" className="flex min-h-11 min-w-11 items-center justify-center rounded-md px-2 font-mono font-bold transition-colors hover:bg-primary/10" aria-label="Home">
+                    <Link href="/" aria-current={pathname === '/' ? 'page' : undefined} className="flex min-h-11 min-w-11 items-center justify-center rounded-md px-2 font-mono font-bold transition-colors hover:bg-primary/10" aria-label="Home">
                         <Home size={20} className={pathname === "/" ? "fill-primary/30 text-primary" : ""} />
                     </Link>
                     <button type="button" onClick={() => setMobileOpen((open) => !open)} className="flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary" aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileOpen} aria-controls="mobile-navigation">
@@ -64,9 +64,9 @@ export default function Header({ resumeUrl }: HeaderProps) {
                 {mobileOpen && (
                     <nav id="mobile-navigation" className="border-t border-border bg-background px-4 py-3 shadow-xl" aria-label="Mobile navigation">
                         <div className="grid gap-1">
-                            <Link href="/blog" onClick={() => setMobileOpen(false)} className={cn("flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground", pathname.startsWith("/blog") && "bg-[var(--nav-cyan)] text-primary-foreground")}>Blog</Link>
-                            <Link href="/projects" onClick={() => setMobileOpen(false)} className={cn("flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground", pathname.startsWith("/projects") && "bg-[var(--nav-green)] text-primary-foreground")}>Projects</Link>
-                            <Link href="/forum" onClick={() => setMobileOpen(false)} className={cn("flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground", pathname.startsWith("/forum") && "bg-[var(--nav-purple)] text-primary-foreground")}>Forum</Link>
+                            <Link href="/blog" onClick={() => setMobileOpen(false)} aria-current={pathname.startsWith("/blog") ? "page" : undefined} className={cn("flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary", pathname.startsWith("/blog") && "bg-primary/10 text-primary")}>Blog</Link>
+                            <Link href="/projects" onClick={() => setMobileOpen(false)} aria-current={pathname.startsWith("/projects") ? "page" : undefined} className={cn("flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary", pathname.startsWith("/projects") && "bg-primary/10 text-primary")}>Projects</Link>
+                            <Link href="/forum" onClick={() => setMobileOpen(false)} aria-current={pathname.startsWith("/forum") ? "page" : undefined} className={cn("flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary", pathname.startsWith("/forum") && "bg-primary/10 text-primary")}>Forum</Link>
                             <a href="mailto:aditya.malik32x@gmail.com" onClick={() => setMobileOpen(false)} className="flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary"><Mail size={18} className="mr-3" /> Email</a>
                             {resumeUrl && <a href={resumeUrl} target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)} className="flex min-h-12 items-center rounded-md px-4 font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary"><FileText size={18} className="mr-3" /> Resume</a>}
                         </div>
@@ -93,6 +93,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
                 <div className="w-full flex justify-between items-center px-4">
                     <Link
                         href="/"
+                        aria-current={pathname === '/' ? 'page' : undefined}
                         className={cn(
                             "ml-16 p-2 transition-all duration-300 rounded-md group",
                             pathname === "/"
@@ -116,10 +117,11 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                 <NavigationMenuLink asChild>
                                     <Link
                                         href="/blog"
+                                        aria-current={pathname.startsWith("/blog") ? "page" : undefined}
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "w-24 justify-center transition-colors hover:!bg-[var(--nav-cyan)] hover:!text-primary-foreground focus:!bg-[var(--nav-cyan)] focus:!text-primary-foreground",
-                                            pathname.startsWith("/blog") ? "!bg-[var(--nav-cyan)] !text-primary-foreground" : "bg-transparent"
+                                            "w-24 justify-center transition-colors hover:!bg-primary/10 hover:!text-primary focus:!bg-primary/10 focus:!text-primary",
+                                            pathname.startsWith("/blog") ? "!bg-primary/10 !text-primary" : "bg-transparent"
                                         )}
                                     >
                                         Blog
@@ -130,10 +132,11 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                 <NavigationMenuLink asChild>
                                     <Link
                                         href="/projects"
+                                        aria-current={pathname.startsWith("/projects") ? "page" : undefined}
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "w-24 justify-center transition-colors hover:!bg-[var(--nav-green)] hover:!text-primary-foreground focus:!bg-[var(--nav-green)] focus:!text-primary-foreground",
-                                            pathname.startsWith("/projects") ? "!bg-[var(--nav-green)] !text-primary-foreground" : "bg-transparent"
+                                            "w-24 justify-center transition-colors hover:!bg-primary/10 hover:!text-primary focus:!bg-primary/10 focus:!text-primary",
+                                            pathname.startsWith("/projects") ? "!bg-primary/10 !text-primary" : "bg-transparent"
                                         )}
                                     >
                                         Projects
@@ -144,10 +147,11 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                 <NavigationMenuLink asChild>
                                     <Link
                                         href="/forum"
+                                        aria-current={pathname.startsWith("/forum") ? "page" : undefined}
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "w-24 justify-center transition-colors hover:!bg-[var(--nav-purple)] hover:!text-primary-foreground focus:!bg-[var(--nav-purple)] focus:!text-primary-foreground",
-                                            pathname.startsWith("/forum") ? "!bg-[var(--nav-purple)] !text-primary-foreground" : "bg-transparent"
+                                            "w-24 justify-center transition-colors hover:!bg-primary/10 hover:!text-primary focus:!bg-primary/10 focus:!text-primary",
+                                            pathname.startsWith("/forum") ? "!bg-primary/10 !text-primary" : "bg-transparent"
                                         )}
                                     >
                                         Forum
@@ -160,7 +164,7 @@ export default function Header({ resumeUrl }: HeaderProps) {
                                         href="mailto:aditya.malik32x@gmail.com"
                                         className={cn(
                                             navigationMenuTriggerStyle(),
-                                            "transition-colors hover:!bg-[var(--nav-cyan)] hover:!text-primary-foreground focus:!bg-[var(--nav-cyan)] focus:!text-primary-foreground group px-3"
+                                            "transition-colors hover:!bg-primary/10 hover:!text-primary focus:!bg-primary/10 focus:!text-primary group px-3"
                                         )}
                                         aria-label="Contact"
                                     >
