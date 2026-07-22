@@ -37,7 +37,32 @@ describe('WorkSection', () => {
     ];
 
     afterEach(() => {
+        window.history.replaceState({}, '', '/');
         vi.restoreAllMocks();
+    });
+
+    it('restores a requested nested home view from the URL', () => {
+        window.history.replaceState({}, '', '/?view=education');
+        const scrollIntoView = vi.fn();
+        Object.defineProperty(Element.prototype, 'scrollIntoView', {
+            configurable: true,
+            value: scrollIntoView,
+        });
+        vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+            callback(0);
+            return 1;
+        });
+
+        render(
+            <WorkSection
+                experienceData={mockExperienceData}
+                educationData={mockEducationData}
+                highlightedProjectsData={[]}
+            />
+        );
+
+        expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Education');
+        expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' });
     });
 
     it('uses inner snap scroller at all breakpoints and sets stages to h-full shrink-0 snap-start without overflow', () => {
@@ -72,12 +97,18 @@ describe('WorkSection', () => {
         expect(experienceStage).not.toHaveClass('overflow-y-scroll');
 
         const rails = container.querySelectorAll('[data-timeline-rail]');
-        expect(rails).toHaveLength(1);
+        expect(rails).toHaveLength(2);
         expect(rails[0]).toHaveAttribute('aria-hidden', 'true');
         expect(rails[0]).toHaveAttribute('data-timeline-rail', 'experience');
-        expect((rails[0] as HTMLElement).style.height).toBe('16rem');
-        expect(rails[0].parentElement).toHaveClass('sticky', 'top-1/2', 'w-full');
-        expect(container.querySelectorAll('[data-timeline-node]')).toHaveLength(5);
+        expect(rails[0]).toHaveClass('top-16', 'bottom-16');
+        expect(rails[1]).toHaveAttribute('data-timeline-rail', 'education');
+        expect(rails[1]).toHaveClass('top-16', 'bottom-16');
+        expect(container.querySelectorAll('.md\\:h-32')).toHaveLength(5);
+        expect(container.querySelectorAll('[data-timeline-node]')).toHaveLength(0);
+        const connectors = container.querySelectorAll('[data-timeline-connector]');
+        expect(connectors).toHaveLength(5);
+        expect(connectors[0]).toHaveClass('w-[20px]', '-right-[20px]');
+        expect(connectors[1]).toHaveClass('w-[20px]', '-left-[20px]');
     });
 
     it('creates IntersectionObserver for inner scroller on all viewports without window scroll listeners', () => {
@@ -170,10 +201,8 @@ describe('WorkSection', () => {
             ], {} as IntersectionObserver);
         });
 
-        const sharedRail = document.querySelector('[data-timeline-rail]');
-        expect(sharedRail).toHaveAttribute('data-timeline-rail', 'education');
-        expect((sharedRail as HTMLElement).style.height).toBe('8rem');
-        expect(sharedRail?.querySelector('.timeline-flow-down')).toHaveClass('via-secondary');
+        const educationRail = document.querySelector('[data-timeline-rail="education"]');
+        expect(educationRail?.querySelector('.timeline-flow-up')).toHaveClass('via-secondary');
         expect(screen.getByRole('heading', { level: 2 })).toHaveClass('text-secondary');
 
         act(() => {
