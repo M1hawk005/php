@@ -12,12 +12,15 @@ import type { Project } from "@/data/projects";
 type ProjectCardProps = {
     project: Project;
     compact?: boolean;
+    source?: "projects" | "featured";
 }
 
-export default function ProjectCard({ project, compact }: ProjectCardProps) {
+export default function ProjectCard({ project, compact, source = "projects" }: ProjectCardProps) {
+    const projectHref = `/projects/${project.slug || project.id}${source === "featured" ? "?from=home&view=featured-projects" : "?from=projects"}`;
+
     return (
         <Card className={`flex flex-col relative overflow-hidden bg-background/50 backdrop-blur-md border border-border/50 hover:border-primary/50 transition-all duration-300 group hover:-translate-y-1 p-0 gap-0 ${compact ? 'h-full' : ''}`}>
-            <Link href={`/projects/${project.slug || project.id}`} className="absolute inset-0 z-10" aria-label={`View details for ${project.name}`}></Link>
+            <Link href={projectHref} className="absolute inset-0 z-10" aria-label={`View details for ${project.name}`}></Link>
             <CardHeader className={`relative z-0 ${compact ? 'p-3 pb-1 md:p-4 md:pb-2' : 'p-6 pb-4'}`}>
                 <CardTitle className={`font-bold text-foreground group-hover:text-primary transition-colors duration-300 relative z-0 ${compact ? 'text-base md:text-lg' : 'text-lg'}`}>{project.name}</CardTitle>
                 {project.techStack && project.techStack.length ? (

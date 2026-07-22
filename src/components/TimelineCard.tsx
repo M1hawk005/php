@@ -23,6 +23,8 @@ const isNullish = (val: string | null | undefined): boolean => {
 };
 
 export default function TimelineCard({ timeline, compact }: TimelineCardProps) {
+    const sourceView = timeline.category === "education" ? "education" : "experience";
+
     return (
         <div className="relative group h-full">
             {/* Glow effect */}
@@ -33,7 +35,7 @@ export default function TimelineCard({ timeline, compact }: TimelineCardProps) {
             <Card className={`flex flex-col justify-center h-full relative overflow-hidden bg-card/50 backdrop-blur-sm border-border/40 hover:border-primary/30 transition-all duration-500 ${compact ? 'min-h-28 py-4' : 'group-hover:translate-y-[-2px]'} `}>
                 {timeline.slug && timeline.category && (
                     <Link
-                        href={`/timeline/${timeline.slug}`}
+                        href={`/timeline/${timeline.slug}?from=home&view=${sourceView}`}
                         className="absolute inset-0 z-10"
                         aria-label={`View details for ${timeline.title}`}
                     />

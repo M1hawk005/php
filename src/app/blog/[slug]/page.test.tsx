@@ -8,6 +8,10 @@ vi.mock('@/lib/markdown', () => ({
     getBlogs: vi.fn(),
 }));
 
+vi.mock('@/components/ContextBackButton', () => ({
+    default: () => <button type="button">Back to Blogs</button>,
+}));
+
 describe('BlogPage', () => {
     it('renders article title as h1 and markdown headings shifted down', async () => {
         vi.mocked(markdown.getBlogBySlug).mockReturnValue({
@@ -17,7 +21,8 @@ describe('BlogPage', () => {
         });
 
         const params = Promise.resolve({ slug: 'test-post' });
-        const Component = await BlogPage({ params });
+        const searchParams = Promise.resolve({ from: 'blog' });
+        const Component = await BlogPage({ params, searchParams });
         render(Component);
 
         // the page title should be the only H1

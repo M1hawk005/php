@@ -1,26 +1,34 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import { getTimelineBySlug, getTimelines } from '@/lib/markdown';
+import ContextBackButton from '@/components/ContextBackButton';
 
 export function generateStaticParams() {
     return getTimelines().map(entry => ({ slug: entry.slug }));
 }
 
-export default async function TimelinePage({ params }: { params: Promise<{ slug: string }> }) {
+type TimelinePageProps = {
+    params: Promise<{ slug: string }>;
+    searchParams: Promise<{ from?: string; view?: string }>;
+};
+
+export default async function TimelinePage({ params, searchParams }: TimelinePageProps) {
     const { slug } = await params;
+    const source = await searchParams;
     const entry = getTimelineBySlug(slug);
 
     if (!entry) notFound();
 
     const { frontmatter, content } = entry;
+    const view = source.view === "education" || source.view === "experience"
+        ? source.view
+        : frontmatter.category === "education" ? "education" : "experience";
+    const backLabel = view === "education" ? "Back to Education" : "Back to Experience";
 
     return (
         <main className="min-h-screen px-4 pb-12 pt-28 md:px-8">
             <article className="mx-auto max-w-4xl">
-                <Link href="/" className="mb-8 inline-flex text-muted-foreground transition-colors hover:text-primary">
-                    &larr; Back to Home
-                </Link>
+                <ContextBackButton fallbackHref={`/?view=${view}`} label={backLabel} />
 
                 <p className="mb-3 font-mono text-sm uppercase tracking-wider text-primary">
                     {frontmatter.category}

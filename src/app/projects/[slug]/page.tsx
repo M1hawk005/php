@@ -1,7 +1,7 @@
 import { getProjectBySlug, getProjects } from "@/lib/markdown";
-import ReactMarkdown from 'react-markdown';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import MarkdownArticle from '@/components/MarkdownArticle';
+import ContextBackButton from '@/components/ContextBackButton';
 
 export async function generateStaticParams() {
     const projects = getProjects();
@@ -10,20 +10,30 @@ export async function generateStaticParams() {
     }));
 }
 
-export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+type ProjectPageProps = {
+    params: Promise<{ slug: string }>;
+    searchParams: Promise<{ from?: string; view?: string }>;
+};
+
+export default async function ProjectPage({ params, searchParams }: ProjectPageProps) {
     const slug = (await params).slug;
+    const source = await searchParams;
     const project = getProjectBySlug(slug);
     
     if (!project) {
         notFound();
     }
 
+    const fromFeaturedProjects = source.from === "home" && source.view === "featured-projects";
+
     return (
         <main className="min-h-screen pt-28 pb-12 px-4 md:px-8 max-w-4xl mx-auto">
-            <Link href="/projects" className="text-muted-foreground hover:text-primary mb-8 inline-flex items-center transition-colors">
-                &larr; Back to Projects
-            </Link>
-            <article className="prose prose-invert lg:prose-xl mx-auto mt-8">
+            <ContextBackButton
+                fallbackHref={fromFeaturedProjects ? "/?view=featured-projects" : "/projects"}
+                label={fromFeaturedProjects ? "Back to Featured Projects" : "Back to Projects"}
+                preserveHistory={source.from === "projects"}
+            />
+            <article className="mx-auto mt-8">
                 <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">{project.frontmatter.title || project.slug}</h1>
                 <div className="flex gap-4 mb-12">
                     {project.frontmatter.link && (
@@ -37,7 +47,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                         </a>
                     )}
                 </div>
-                <ReactMarkdown>{project.content}</ReactMarkdown>
+                <MarkdownArticle content={project.content} />
             </article>
         </main>
     );

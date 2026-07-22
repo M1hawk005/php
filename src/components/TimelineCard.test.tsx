@@ -32,7 +32,14 @@ describe('TimelineCard', () => {
         render(<TimelineCard timeline={mockTimeline} />);
 
         expect(screen.getByRole('link', { name: /view details for software engineer/i }))
-            .toHaveAttribute('href', '/timeline/software-engineer');
+            .toHaveAttribute('href', '/timeline/software-engineer?from=home&view=experience');
+    });
+
+    it('records Education as the return view', () => {
+        render(<TimelineCard timeline={{ ...mockTimeline, category: 'education' }} />);
+
+        expect(screen.getByRole('link', { name: /view details for software engineer/i }))
+            .toHaveAttribute('href', '/timeline/software-engineer?from=home&view=education');
     });
 
     it('renders correctly without optional fields like marksheetUrl', () => {

@@ -59,6 +59,7 @@ describe('ProjectCard', () => {
         // Find the detail link
         const detailLink = screen.getByRole('link', { name: /view details for awesome project/i });
         expect(detailLink).toHaveClass('absolute', 'inset-0');
+        expect(detailLink).toHaveAttribute('href', '/projects/1?from=projects');
 
         // Find footer links
         const liveLink = screen.getByRole('link', { name: /view live/i });
@@ -71,6 +72,13 @@ describe('ProjectCard', () => {
         // Verify footer links have higher z-index / position above overlay
         expect(liveLink).toHaveClass('relative', 'z-20');
         expect(githubLink).toHaveClass('relative', 'z-20');
+    });
+
+    it('records Featured Projects as the return view for home cards', () => {
+        render(<ProjectCard project={mockProject} source="featured" />);
+
+        expect(screen.getByRole('link', { name: /view details for awesome project/i }))
+            .toHaveAttribute('href', '/projects/1?from=home&view=featured-projects');
     });
 
     it('compact project variant has no nested anchors and maintains detail targets', () => {
