@@ -3,7 +3,7 @@ title: "PhP — Personal Portfolio & Web Platform"
 description: "A content-driven portfolio and community platform with interactive timelines, technical writing, an anonymous forum, and production-focused security."
 techStack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "PostgreSQL", "Prisma", "Docker", "Markdown"]
 isHighlighted: true
-link: "https://portfolio.m1hawk.org"
+link: "https://php-m1hawk.vercel.app/"
 githubUrl: "https://github.com/M1hawk005/php"
 ---
 
