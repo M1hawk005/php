@@ -4,7 +4,8 @@ vi.mock('server-only', () => ({}));
 vi.mock('next/headers', () => ({ headers: vi.fn() }));
 vi.mock('@/lib/prisma', () => ({ prisma: {} }));
 
-import { isUuid, validateAsciiImage } from './forum-security';
+import type { Prisma } from '@prisma/client';
+import { acquireTransactionLock, isUuid, validateAsciiImage } from './forum-security';
 
 function pngDataUrl(width: number, height: number) {
   const signature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
@@ -37,5 +38,18 @@ describe('forum security validation', () => {
     const spoofed = `data:image/png;base64,${Buffer.from('not an image').toString('base64')}`;
     expect(validateAsciiImage(spoofed)).toEqual({ error: 'Attachment data is not a valid PNG or WebP image.' });
     expect(validateAsciiImage(pngDataUrl(20_000, 20_000))).toEqual({ error: 'Generated ASCII image dimensions are too large.' });
+  });
+
+  it('casts PostgreSQL advisory-lock results to a Prisma-supported type', async () => {
+    const queryRaw = vi.fn().mockResolvedValue([{ lock: '' }]);
+    const transaction = { $queryRaw: queryRaw } as unknown as Prisma.TransactionClient;
+
+    await acquireTransactionLock(transaction, 'forum-test-lock');
+
+    expect(queryRaw).toHaveBeenCalledOnce();
+    const sql = (queryRaw.mock.calls[0][0] as TemplateStringsArray).join('?');
+    expect(sql).toContain('pg_advisory_xact_lock');
+    expect(sql).toContain('::text AS lock');
+    expect(queryRaw.mock.calls[0][1]).toBe('forum-test-lock');
   });
 });

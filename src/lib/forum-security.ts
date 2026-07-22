@@ -2,6 +2,7 @@ import 'server-only';
 
 import { createHash } from 'crypto';
 import { headers } from 'next/headers';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { FORUM_LIMITS } from '@/lib/forum-limits';
 
@@ -106,11 +107,17 @@ async function fingerprint() {
   return createHash('sha256').update(`${forumSecuritySalt()}:${ip}`).digest('hex');
 }
 
+export async function acquireTransactionLock(tx: Prisma.TransactionClient, key: string) {
+  await tx.$queryRaw<{ lock: string }[]>`
+    SELECT pg_advisory_xact_lock(hashtext(${key}))::text AS lock
+  `;
+}
+
 export async function enforceRateLimit(action: string, limit: number, windowSeconds: number) {
   const key = await fingerprint();
   const since = new Date(Date.now() - windowSeconds * 1000);
   return prisma.$transaction(async (tx) => {
-    await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtext(${`${key}:${action}`}))`;
+    await acquireTransactionLock(tx, `${key}:${action}`);
     const count = await tx.rateLimitEvent.count({
       where: { fingerprint: key, action, created_at: { gte: since } },
     });

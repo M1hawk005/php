@@ -4,7 +4,7 @@ import { createHash } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { clearForumAdminSession, isForumAdmin, setForumAdminSession, verifyAdminPassword } from '@/lib/forum-auth';
-import { enforceRateLimit, forumSecuritySalt, isUuid, validateAsciiImage, validateForumText } from '@/lib/forum-security';
+import { acquireTransactionLock, enforceRateLimit, forumSecuritySalt, isUuid, validateAsciiImage, validateForumText } from '@/lib/forum-security';
 import { FORUM_LIMITS } from '@/lib/forum-limits';
 
 type ForumTarget = 'thread' | 'post';
@@ -151,7 +151,7 @@ export async function createReply(formData: FormData) {
 
   try {
     const post = await prisma.$transaction(async (tx) => {
-      await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtext(${`forum-thread:${threadId}`}))`;
+      await acquireTransactionLock(tx, `forum-thread:${threadId}`);
       const thread = await tx.thread.findUnique({ where: { id: threadId }, select: { is_archived: true } });
       if (!thread || (thread.is_archived && !admin)) throw new Error('THREAD_UNAVAILABLE');
 
