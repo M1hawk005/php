@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">PhP platform architecture</title>
+  <desc id="desc">Flow from visitors through the Next.js application to Markdown content and PostgreSQL, protected by validation and deployment controls.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#09090b"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#60a5fa"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#22d3ee"/></marker>
+  </defs>
+  <rect width="1200" height="680" rx="28" fill="url(#bg)"/>
+  <rect x="1" y="1" width="1198" height="678" rx="27" fill="none" stroke="#27272a" stroke-width="2"/>
+  <text x="70" y="75" fill="#f4f4f5" font-family="Inter,Segoe UI,sans-serif" font-size="34" font-weight="700">PhP platform architecture</text>
+  <text x="70" y="108" fill="#a1a1aa" font-family="ui-monospace,Consolas,monospace" font-size="17">CONTENT-DRIVEN UI + CONTROLLED PUBLIC WRITES</text>
+
+  <g font-family="Inter,Segoe UI,sans-serif">
+    <rect x="70" y="185" width="250" height="150" rx="18" fill="#18181b" stroke="#22d3ee" stroke-width="2"/>
+    <text x="100" y="228" fill="#22d3ee" font-size="16" font-weight="700">01 / BROWSER</text>
+    <text x="100" y="268" fill="#f4f4f5" font-size="25" font-weight="650">Visitor experience</text>
+    <text x="100" y="300" fill="#a1a1aa" font-size="17">React UI · scroll timeline</text>
+    <text x="100" y="326" fill="#a1a1aa" font-size="17">client-side ASCII canvas</text>
+
+    <path d="M325 260H435" stroke="url(#cyan)" stroke-width="4" marker-end="url(#arrow)" filter="url(#glow)"/>
+
+    <rect x="450" y="155" width="300" height="210" rx="18" fill="#18181b" stroke="#60a5fa" stroke-width="2"/>
+    <text x="480" y="198" fill="#60a5fa" font-size="16" font-weight="700">02 / NEXT.JS APP</text>
+    <text x="480" y="238" fill="#f4f4f5" font-size="25" font-weight="650">Application boundary</text>
+    <text x="480" y="276" fill="#a1a1aa" font-size="17">Static pages + server actions</text>
+    <text x="480" y="304" fill="#a1a1aa" font-size="17">validation · auth · rate limits</text>
+    <rect x="480" y="326" width="238" height="2" fill="url(#cyan)"/>
+
+    <path d="M755 225H865" stroke="#a78bfa" stroke-width="4" marker-end="url(#arrow)"/>
+    <path d="M755 305H865" stroke="#34d399" stroke-width="4" marker-end="url(#arrow)"/>
+
+    <rect x="880" y="150" width="250" height="140" rx="18" fill="#18181b" stroke="#a78bfa" stroke-width="2"/>
+    <text x="910" y="193" fill="#a78bfa" font-size="16" font-weight="700">03A / CONTENT</text>
+    <text x="910" y="232" fill="#f4f4f5" font-size="24" font-weight="650">Markdown files</text>
+    <text x="910" y="263" fill="#a1a1aa" font-size="17">blogs · projects · timeline</text>
+
+    <rect x="880" y="315" width="250" height="140" rx="18" fill="#18181b" stroke="#34d399" stroke-width="2"/>
+    <text x="910" y="358" fill="#34d399" font-size="16" font-weight="700">03B / STATE</text>
+    <text x="910" y="397" fill="#f4f4f5" font-size="24" font-weight="650">PostgreSQL</text>
+    <text x="910" y="428" fill="#a1a1aa" font-size="17">threads · replies · votes</text>
+
+    <rect x="70" y="500" width="1060" height="110" rx="18" fill="#0f172a" stroke="#334155"/>
+    <text x="105" y="543" fill="#f4f4f5" font-size="20" font-weight="650">Production envelope</text>
+    <text x="105" y="578" fill="#94a3b8" font-size="17">Caddy / Nginx</text>
+    <circle cx="278" cy="572" r="4" fill="#22d3ee"/>
+    <text x="300" y="578" fill="#94a3b8" font-size="17">Docker isolation</text>
+    <circle cx="475" cy="572" r="4" fill="#22d3ee"/>
+    <text x="497" y="578" fill="#94a3b8" font-size="17">CSP headers</text>
+    <circle cx="636" cy="572" r="4" fill="#22d3ee"/>
+    <text x="658" y="578" fill="#94a3b8" font-size="17">private DB network</text>
+    <circle cx="863" cy="572" r="4" fill="#22d3ee"/>
+    <text x="885" y="578" fill="#94a3b8" font-size="17">versioned migrations</text>
+  </g>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
+  <title id="title">The PhP project journey</title>
+  <desc id="desc">A rising five-stage graph from a static portfolio to a secure deployed web platform.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#09090b"/><stop offset="1" stop-color="#111827"/></linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#a78bfa"/><stop offset="0.5" stop-color="#22d3ee"/><stop offset="1" stop-color="#34d399"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="640" rx="28" fill="url(#bg)"/>
+  <rect x="1" y="1" width="1198" height="638" rx="27" fill="none" stroke="#27272a" stroke-width="2"/>
+  <text x="70" y="74" fill="#f4f4f5" font-family="Inter,Segoe UI,sans-serif" font-size="34" font-weight="700">The build changed as the ambition changed</text>
+  <text x="70" y="108" fill="#a1a1aa" font-family="ui-monospace,Consolas,monospace" font-size="17">EACH INTERACTION INTRODUCED A NEW ENGINEERING PROBLEM</text>
+  <g stroke="#27272a" stroke-width="1">
+    <path d="M80 490H1120"/><path d="M80 390H1120"/><path d="M80 290H1120"/><path d="M80 190H1120"/>
+  </g>
+  <path d="M120 475L355 405L590 325L825 235L1060 165" fill="none" stroke="url(#line)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  <g font-family="Inter,Segoe UI,sans-serif">
+    <g><circle cx="120" cy="475" r="13" fill="#a78bfa"/><text x="90" y="525" fill="#f4f4f5" font-size="19" font-weight="650">Portfolio</text><text x="90" y="551" fill="#a1a1aa" font-size="15">present the work</text></g>
+    <g><circle cx="355" cy="405" r="13" fill="#8b9df7"/><text x="305" y="455" fill="#f4f4f5" font-size="19" font-weight="650">Markdown</text><text x="305" y="481" fill="#a1a1aa" font-size="15">separate content</text></g>
+    <g><circle cx="590" cy="325" r="13" fill="#22d3ee"/><text x="535" y="375" fill="#f4f4f5" font-size="19" font-weight="650">Timeline UI</text><text x="535" y="401" fill="#a1a1aa" font-size="15">show progression</text></g>
+    <g><circle cx="825" cy="235" r="13" fill="#2dd4bf"/><text x="773" y="285" fill="#f4f4f5" font-size="19" font-weight="650">Forum</text><text x="773" y="311" fill="#a1a1aa" font-size="15">accept public writes</text></g>
+    <g><circle cx="1060" cy="165" r="13" fill="#34d399"/><text x="930" y="208" fill="#f4f4f5" font-size="19" font-weight="650">Secure platform</text><text x="930" y="234" fill="#a1a1aa" font-size="15">operate responsibly</text></g>
+  </g>
+</svg>

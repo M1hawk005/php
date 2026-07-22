@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Portfolio scope meme</title>
+  <desc id="desc">A humorous two-panel graphic contrasting the plan for a simple portfolio with the resulting full-stack platform.</desc>
+  <rect width="1200" height="620" rx="28" fill="#09090b"/>
+  <rect x="1" y="1" width="1198" height="618" rx="27" fill="none" stroke="#27272a" stroke-width="2"/>
+  <line x1="600" y1="55" x2="600" y2="565" stroke="#27272a" stroke-width="3"/>
+  <g font-family="Inter,Segoe UI,sans-serif">
+    <text x="70" y="95" fill="#a1a1aa" font-family="ui-monospace,Consolas,monospace" font-size="18">THE PLAN</text>
+    <text x="670" y="95" fill="#22d3ee" font-family="ui-monospace,Consolas,monospace" font-size="18">THE REPOSITORY, LATER</text>
+
+    <rect x="105" y="150" width="390" height="245" rx="20" fill="#18181b" stroke="#3f3f46"/>
+    <circle cx="300" cy="235" r="48" fill="none" stroke="#a1a1aa" stroke-width="7"/>
+    <path d="M275 227L291 243M325 227L309 243M276 278Q300 292 324 278" fill="none" stroke="#a1a1aa" stroke-width="7" stroke-linecap="round"/>
+    <text x="300" y="444" fill="#f4f4f5" font-size="25" font-weight="700" text-anchor="middle">“A simple portfolio.”</text>
+    <text x="300" y="478" fill="#a1a1aa" font-size="17" text-anchor="middle">A few cards. Maybe a blog.</text>
+
+    <rect x="670" y="145" width="425" height="340" rx="20" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+    <g fill="#f4f4f5" font-family="ui-monospace,Consolas,monospace" font-size="20">
+      <text x="710" y="200">✓ anonymous forum</text>
+      <text x="710" y="244">✓ canvas ASCII engine</text>
+      <text x="710" y="288">✓ PostgreSQL advisory locks</text>
+      <text x="710" y="332">✓ CSP + attachment validation</text>
+      <text x="710" y="376">✓ Docker + reverse proxy</text>
+      <text x="710" y="420">✓ 47 automated tests</text>
+    </g>
+    <text x="882" y="535" fill="#34d399" font-size="24" font-weight="750" text-anchor="middle">SCOPE: SUCCESSFULLY ESCALATED</text>
+  </g>
+</svg>
